@@ -1,0 +1,29 @@
+import "pkg:/components/itemComponents/rowListItem/RowListItemStyle.bs"
+import "pkg:/source/sdk/utils/ViewUtils.bs"
+
+sub init()
+    m.style = App.Utils.ViewUtils.applyStyle(App.RowListItem.Style.build())
+
+    m.background = m.top.findNode("background")
+    m.focusBorder = m.top.findNode("focusBorder")
+    m.itemImage = m.top.findNode("itemImage")
+
+    m.top.observeFieldScoped("focusPercent", "onFocusPercentChanged")
+    m.top.observeFieldScoped("itemContent", "onItemContentChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+sub onItemContentChanged(event as Object)
+    content = event.getData()
+
+    m.itemImage.uri = content.images.portrait
+
+    m.content = content
+end sub
+
+sub onFocusPercentChanged(event as Object)
+    m.focusBorder.opacity = event.getData()
+end sub

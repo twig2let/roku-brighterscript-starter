@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="ErrorScreen" extends="BaseScreen">
+    <children>
+        <Rectangle width="1920" height="1080" color="0x000000" />
+
+        <Poster width="450" uri="pkg:/images/views/error/sad_face.png" translation="[125, 279]"/>
+
+        <LayoutGroup layoutDirection="vert" translation="[690, 540]" itemSpacings="21" vertAlignment="center">
+            <AppLabel text="Err, something bad happened!" fontStyle="BOLD" fontSize="70" />
+            <AppLabel text="Press the home button to quit." fontStyle="REGULAR" fontSize="60" />
+        </LayoutGroup>
+    </children>
+
+    <script type="text/brightscript" uri="./ErrorScreen.bs" />
+</component>

@@ -1,0 +1,33 @@
+import "pkg:/source/facades/RouterFacade.bs"
+
+sub init()
+    m.video = m.top.findNode("video")
+
+    m.video.observeFieldScoped("state", "onVideoStateChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+' @override
+sub onParamsChanged(event as Object)
+    params = event.getData()
+
+    m.video.setFocus(true)
+    _setVideoSource(params)
+end sub
+
+sub onVideoStateChanged(event as Object)
+    state = event.getData()
+    if state = "error" OR state = "finished" then App.Navigation.Router.goBack()
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _setVideoSource(params as Object)
+    m.video.content = params.source
+    m.video.control = "play"
+end sub

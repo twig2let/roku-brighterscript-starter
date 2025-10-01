@@ -1,0 +1,19 @@
+namespace App.HomeScreen.Style
+
+    const ROW_LIST_SETTINGS = {
+        drawFocusFeedback: false
+        itemComponentName: "RowListItem"
+        itemSize: [1800, 480]
+        itemSpacing: [0, 80]
+        numRows: 3
+        rowFocusAnimationStyle: "floatingFocus"
+        rowItemSize: [[339, 460]]
+        rowItemSpacing: [[50, 50]]
+        rowLabelColor: "0xffffffff"
+        rowLabelOffset: [[0, 20]]
+        showRowLabel: [true, true]
+        showRowLabel: true
+        translation: [112, 69]
+    }
+
+end namespace

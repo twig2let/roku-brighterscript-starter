@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="HttpRequestTask" extends="Task">
+    <interface>
+        <!-- inputs -->
+        <field id="method" type="string" />
+        <field id="options" type="assocArray" />
+        <field id="url" type="string" />
+        <field id="uuid" type="string" />
+
+        <!-- outputs -->
+        <field id="output" type="assocArray" />
+    </interface>
+
+    <script type="text/brightscript" uri="./HttpRequestTask.bs" />
+</component>

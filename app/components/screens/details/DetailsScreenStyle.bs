@@ -1,0 +1,110 @@
+namespace App.DetailsScreen.Style
+
+    function build(theme = m.global.theme as Object, options = invalid as Object) as Object
+
+        return {
+            poster: {
+                height: 1080
+                loadDisplayMode: "scaleToZoom"
+                width: 1920
+            }
+
+            watchNowButton: {
+                focusBorderColor: theme.COLORS.PRIMARY
+                foregroundColor: "0xffffff"
+                fontStyle: {
+                    color: "0x000000"
+                    fontSize: 28
+                    fontStyle: "MEDIUM"
+                }
+            }
+
+            dimmer: {
+                width: 1920
+                height: 1080
+                uri: "pkg:/images/dimmers/details_dimmer.png"
+            }
+
+            metadataLayoutGroup: {
+                horizAlignment: "left"
+                itemSpacings: [10, 20]
+                layoutDirection: "vert"
+                opacity: 0
+                translation: [50, 800]
+                vertAlignment: "bottom"
+            }
+
+            titleLabel: {
+                color: "0xffffffff"
+                fontSize: 80
+                fontStyle: "REGULAR"
+                maxLines: 2
+                width: 960
+                wrap: true
+            }
+
+            summaryLabel: {
+                color: "0xffffffff"
+                fontSize: 28
+                fontStyle: "LIGHT"
+                maxLines: 6
+                width: 960
+                wrap: true
+            }
+
+            extrasLabel: {
+                color: "0xffffffff"
+                fontSize: 24
+                fontStyle: "MEDIUM"
+                maxLines: 1
+                width: 960
+            }
+
+            focusLayoutGroup: {
+                opacity: 0
+                translation: [50, 930]
+            }
+
+            ' ANIMATIONS
+
+            metadataFadeInAnimation: {
+                delay: 0.6
+                duration: 1
+                easeFunction: "outExpo"
+                repeat: "false"
+            }
+            metadataFadeInInterpolator: {
+                key: [0.0, 1.0]
+                keyValue: [0.0, 1.0]
+            }
+
+            metadataMoveUpAnimation: {
+                duration: 1
+                repeat: "false"
+                easeFunction: "outExpo"
+            }
+
+            metadataMoveUpInterpolator: {
+                key: [0.0, 1.0]
+                keyValue: [
+                    [50, 890]
+                    [50, 860]
+                ]
+            }
+
+            focusLayoutGroupFadeInAnimation: {
+                duration: 1
+                repeat: "false"
+                easeFunction: "outExpo"
+                delay: 0.6
+            }
+
+            focusLayoutGroupFadeInInterpolator: {
+                key: [0.0, 1.0]
+                keyValue: [0.0, 1.0]
+            }
+        }
+
+    end function
+
+end namespace

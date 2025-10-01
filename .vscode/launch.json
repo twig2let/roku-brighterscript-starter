@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "brightscript",
+            "request": "launch",
+            "consoleOutput": "normal",
+            "internalConsoleOptions": "openOnSessionStart",
+            "name": "Debug",
+            "envFile": "${workspaceFolder}/.env",
+            "host": "${env:ROKU_IP}",
+            "password": "${env:ROKU_DEV_PASSWORD}",
+            "preLaunchTask": "Build",
+            "stopOnEntry": false,
+            "files": [
+                "*",
+                "*.*",
+                "**/*.*"
+            ],
+            "rootDir": "${workspaceFolder}/out/transpiled",
+            "sourceDirs": [
+                "${workspaceFolder}/app"
+            ]
+        }
+    ]
+}

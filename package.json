@@ -1,0 +1,20 @@
+{
+    "name": "Roku Brighterscript Template",
+    "version": "1.0.0",
+    "description": "A template for Roku development using Brighterscript.",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "vsc": "node ./pipeline/development-pipeline"
+    },
+    "engines": {
+        "node": ">=16.0.0",
+        "npm": ">=8.0.0"
+    },
+    "devDependencies": {
+        "brighterscript": "^0.68.4",
+        "dotenv": "^16.4.7",
+        "fs-extra": "^11.1.1",
+        "lodash": "^4.17.21"
+    }
+}

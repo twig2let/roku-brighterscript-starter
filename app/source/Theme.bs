@@ -1,0 +1,15 @@
+namespace App.Theme
+
+    const COLORS = {
+        PRIMARY: "0x58B461"
+    }
+
+    const FONTS = {
+        BOLD: "pkg:/fonts/Poppins-Bold.ttf",
+        LIGHT: "pkg:/fonts/Poppins-Light.ttf"
+        MEDIUM: "pkg:/fonts/Poppins-Medium.ttf"
+        REGULAR: "pkg:/fonts/Poppins-REGULAR.ttf"
+    }
+
+    const MINIMUM_SPLASH_DURATION = 2.5
+end namespace

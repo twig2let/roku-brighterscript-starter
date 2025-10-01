@@ -1,0 +1,33 @@
+import "pkg:/source/Theme.bs"
+
+namespace App.RowListItem.Style
+
+    function build(theme = m.global.theme as Object, options = invalid as Object) as Object
+
+        return {
+            focusBorder: {
+                color: theme.COLORS.PRIMARY
+                height: 460
+                opacity: 0
+                translation: [0, 0]
+                width: 339
+            }
+
+            background: {
+                color: "0xEDEDED"
+                height: 420
+                translation: [20, 20]
+                width: 299
+            }
+
+            itemImage: {
+                height: 420
+                translation: [20, 20]
+                width: 299
+            }
+        }
+
+    end function
+
+
+end namespace

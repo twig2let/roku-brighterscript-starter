@@ -1,0 +1,19 @@
+{
+    "sourceMap": true,
+    "stagingDir": "out/transpiled",
+    "diagnosticFilters": [
+        {
+            "src": "**/*",
+            "codes": [
+                1013
+            ]
+        }
+    ],
+    "retainStagingDir": true,
+    "createPackage": false,
+    "watch": false,
+    "rootDir": "app",
+    "files": [
+        "**/*"
+    ]
+}

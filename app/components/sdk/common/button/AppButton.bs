@@ -1,0 +1,62 @@
+const DEFAULT_HORIZONTAL_PADDING = 60
+const DEFAULT_VERTICAL_PADDING = 10
+const DEFAULT_BORDER_THICKNESS = 10
+
+sub init()
+    m.top.focusable = true
+
+    m.buttonFocusBorder = m.top.findNode("buttonFocusBorder")
+    m.buttonForeground = m.top.findNode("buttonForeground")
+    m.buttonLabel = m.top.findNode("buttonLabel")
+
+    m.top.observeFieldScoped("fontStyle", "onFontStyleChanged")
+    m.top.observeFieldScoped("focusedChild", "onFocusedChildChanged")
+    m.top.observeFieldScoped("text", "onTextChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+sub onTextChanged(event as Object)
+    m.buttonLabel.text = event.getData()
+
+    _setDimensions(m.buttonLabel.boundingRect())
+end sub
+
+sub onFontStyleChanged(event as Object)
+    m.buttonLabel.setFields(event.getData())
+
+    _setDimensions(m.buttonLabel.boundingRect())
+end sub
+
+sub onFocusedChildChanged(event as Object)
+    m.buttonFocusBorder.visible = m.top.hasFocus()
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _setDimensions(boundingRect as Object)
+    if boundingRect.width = 0 OR boundingRect.height = 0 then return
+
+    buttonHeight = boundingRect.height + (DEFAULT_VERTICAL_PADDING * 2)
+    buttonWidth = boundingRect.width + (DEFAULT_HORIZONTAL_PADDING * 2)
+
+    m.buttonFocusBorder.setFields({
+        width: buttonWidth + (DEFAULT_BORDER_THICKNESS * 2)
+        height: buttonHeight + (DEFAULT_BORDER_THICKNESS * 2)
+        translation: [-DEFAULT_BORDER_THICKNESS, -DEFAULT_BORDER_THICKNESS]
+    })
+
+    m.buttonForeground.setFields({
+        height: buttonHeight
+        width: buttonWidth
+    })
+
+    m.buttonLabel.setFields({
+        height: buttonHeight
+        width: buttonWidth
+    })
+end sub

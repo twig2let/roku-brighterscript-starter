@@ -1,0 +1,43 @@
+' Router Façade
+
+namespace App.Navigation.Router
+
+    ' -------------------
+    ' PUBLIC METHODS
+    ' -------------------
+
+    sub setGlobalRouter(globalNode as Object, router as Object)
+        if type(globalNode) <> "roSGNode" then return
+        globalNode.addFields({ router: router })
+    end sub
+
+    ' routeState will be passed back to the route on a back journey
+    sub navigateTo(route as Object, params = invalid as Object, routeState = invalid as Object)
+        router = _getRouter()
+        if router = invalid
+            print "[RouterFacade] Router not initialised"
+            return
+        end if
+
+        router@.navigateTo(route, params, routeState)
+    end sub
+
+    sub goBack(params = invalid as Object)
+        router = _getRouter()
+        if router = invalid
+            print "[RouterFacade] Router not initialised"
+            return
+        end if
+
+        router@.goBack()
+    end sub
+
+    ' -------------------
+    ' PRIVATE METHODS
+    ' -------------------
+
+    function _getRouter() as Object
+        return m.global.router
+    end function
+
+end namespace

@@ -1,0 +1,12 @@
+sub init()
+    m.top.observeFieldScoped("params", "onParamsChanged")
+    m.top.observeFieldScoped("willDestroy", "onWillDestroyChanged")
+end sub
+
+'@abstract
+sub onWillDestroyChanged(event as Object)
+end sub
+
+'@abstract
+sub onParamsChanged(event as Object)
+end sub

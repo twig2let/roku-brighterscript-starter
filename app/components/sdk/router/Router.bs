@@ -1,0 +1,87 @@
+import "pkg:/source/sdk/utils/ObjectUtils.bs"
+
+sub init()
+    m._isNavigating = false
+    m._params = invalid
+    m._route = invalid
+    m._routeHistory = []
+    m._screen = invalid
+
+    m.routeContainer = m.top.findNode("routeContainer")
+end sub
+
+' -------------------
+' PUBLIC METHODS
+' -------------------
+
+sub navigateTo(route as Object, params = {} as Object, routeState = invalid as Object)
+    if m._isNavigating then return
+
+    ' Prevent pointless reloads (same component + same (shallow) props)
+    if _isSameRoute(m._route, route, m._params, params) then return
+
+    m._isNavigating = true
+
+    ' If the existing route should be added to history, add it!
+    if m._route?.addToHistory ?? false then m._routeHistory.push({
+        params: m._params
+        route: m._route
+        routeState: routeState
+    })
+
+    ' Remove old screen (with teardown)
+    if m._screen <> invalid then _removeScreen(m._screen)
+
+    ' Build new screen
+    m._screen = _addScreen(route, params)
+    m._route = route
+    m._params = params
+
+    m._isNavigating = false
+end sub
+
+sub goBack(params = invalid as Object)
+    if NOT m._route.canGoBack then return
+
+    nextRoute = m._routeHistory.pop()
+    if nextRoute.routeState <> invalid then nextRoute.params.append({ routeState: nextRoute.routeState })
+    navigateTo(nextRoute.route, nextRoute.params)
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+function _isSameRoute(currentRoute as Object, proposedRoute as Object, currentParams as Object, proposedParams as Object) as Boolean
+    if currentRoute?.component <> proposedRoute.component then return false
+
+    return App.Utils.ObjectUtils.shallowEqual(currentParams, proposedParams)
+end function
+
+sub _removeScreen(screen as Object)
+    if screen = invalid return
+
+    ' Give the screen a chance to clean up
+    screen.willDestroy = true
+
+    m.routeContainer.removeChild(screen)
+
+    m._screen = invalid
+end sub
+
+function _addScreen(route as Object, params = {} as Object) as Object
+    screen = m.routeContainer.createChild(route.component)
+
+    if screen = invalid
+        print "[Router] Failed to create: "; route.component
+        m._isNavigating = false
+        return invalid
+    end if
+
+    screen.setFields({
+        name: route.name
+        params: params
+    })
+
+    return screen
+end function

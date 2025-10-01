@@ -1,0 +1,23 @@
+namespace App.Utils.ArrayUtils
+
+    function filterArray(array as Object, filter = invalid as Dynamic, context = invalid as Dynamic) as Object
+        if type(array) <> "roArray" then return []
+        if type(filter) <> "Function" then return []
+
+        filterResult = []
+        for i = 0 to array.count() - 1
+            if context <> invalid
+                if (filter(array[i], i, context)) = true
+                    filterResult.push(array[i])
+                end if
+            else
+                if (filter(array[i], i)) = true
+                    filterResult.push(array[i])
+                end if
+            end if
+        end for
+
+        return filterResult
+    end function
+
+end namespace

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="SplashScreen" extends="BaseScreen">
+    <children>
+        <Poster width="1920" height="1080" uri="pkg:/images/views/splash/background.png" />
+    </children>
+
+    <script type="text/brightscript" uri="./SplashScreen.bs" />
+</component>

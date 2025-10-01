@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="FocusLayoutGroup" extends="LayoutGroup">
+    <interface>
+        <!-- inputs -->
+        <field id="focusIndex" type="integer" alwaysNotify="true" />
+
+        <!-- outputs -->
+        <field id="selectedButtonId" type="string" alwaysNotify="true" />
+    </interface>
+
+    <script type="text/brightscript" uri="./FocusLayoutGroup.bs" />
+</component>

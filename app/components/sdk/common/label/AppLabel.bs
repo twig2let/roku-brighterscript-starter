@@ -1,0 +1,19 @@
+sub init()
+    m.fonts = m.global.theme.fonts
+    m.font = m.top.findNode("font")
+
+    m.top.lineSpacing = 0
+
+    m.top.observeFieldScoped("fontStyle", "_onFontStyleChanged")
+    m.top.observeFieldScoped("fontSize", "_onFontSizeChanged")
+end sub
+
+' EVENT HANDLERS
+
+sub _onFontStyleChanged(event as Object)
+    m.font.uri = m.fonts[m.top.fontStyle] ?? ""
+end sub
+
+sub _onFontSizeChanged(event as Object)
+    m.font.size = m.top.fontSize
+end sub

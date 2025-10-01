@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "datasert.vscode-texty",
+        "eamodio.gitlens",
+        "ibm.output-colorizer",
+        "mikestead.dotenv",
+        "redhat.vscode-xml",
+        "rokucommunity.brightscript",
+        "shardulm94.trailing-spaces"
+    ],
+    "unwantedRecommendations": []
+}

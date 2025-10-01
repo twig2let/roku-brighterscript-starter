@@ -1,0 +1,22 @@
+sub init()
+    m.poster = m.top.findNode("poster")
+    m.fadeAnimation = m.top.findNode("fadeAnimation")
+
+    m.poster.observeFieldScoped("loadStatus", "onLoadStatusChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+sub onLoadStatusChanged(event as Object)
+    if event.getData() = "ready" then _fadePoster()
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _fadePoster()
+    m.fadeAnimation.control = "start"
+end sub

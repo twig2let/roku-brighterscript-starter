@@ -1,0 +1,56 @@
+import "pkg:/components/screens/home/HomeScreenStyle.bs"
+import "pkg:/source/facades/RouterFacade.bs"
+import "pkg:/source/parsers/RowItemParser.bs"
+import "pkg:/source/RouteDefintions.bs"
+
+sub init()
+    m._data = invalid
+
+    m.rowList = m.top.findNode("rowlist")
+
+    m.rowList.setFields(App.HomeScreen.Style.ROW_LIST_SETTINGS)
+
+    m.rowList.observeFieldScoped("rowItemSelected", "onRowItemSelectedChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+' @override
+sub onParamsChanged(event as Object)
+    _buildView(event.getData())
+end sub
+
+sub onRowItemSelectedChanged(event as Object)
+    itemCoords = event.getData()
+    selectedItem = m._contentNodes.getChild(itemCoords[0]).getChild(itemCoords[1])
+
+    if selectedItem <> invalid
+        routeState = { rowItemSelected: itemCoords }
+        App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.DETAILS, { data: {
+                id: selectedItem.id
+                name: selectedItem.name
+                summary: selectedItem.summary
+            }
+        }, routeState)
+    end if
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _buildView(params as Object)
+    _createRowlist(params.data)
+
+    ' Restore item focus, if it's available
+    m.rowList.jumpToRowItem = params.routeState?.rowItemSelected ?? [0, 0]
+
+    m.rowList.setFocus(true)
+end sub
+
+sub _createRowlist(data as Object)
+    m._contentNodes = App.Parsers.RowItemParser.parse(data)
+    m.rowList.content = m._contentNodes
+end sub

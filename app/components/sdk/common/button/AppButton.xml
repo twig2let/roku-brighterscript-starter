@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="AppButton" extends="Group">
+    <interface>
+        <field id="focusBorderColor" type="string" alias="buttonFocusBorder.color" />
+        <field id="fontStyle" type="assocArray" />
+        <field id="foregroundColor" type="string" alias="buttonForeground.color" />
+        <field id="text" type="string" />
+    </interface>
+
+    <children>
+        <Rectangle id="buttonFocusBorder" visible="false" />
+        <Rectangle id="buttonForeground"/>
+        <AppLabel id="buttonLabel" vertAlign="center" horizAlign="center" />
+    </children>
+
+    <script type="text/brightscript" uri="./AppButton.bs" />
+</component>

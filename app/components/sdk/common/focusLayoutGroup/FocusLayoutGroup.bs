@@ -1,0 +1,74 @@
+' Handles the focus movement between children of a LayoutGroup e.g. a list of buttons
+sub init()
+    m._focusIndex = 0
+    m._itemCount = -1
+
+    m.top.observeFieldScoped("focusedChild", "onFocusedChildChanged")
+    m.top.observeFieldScoped("focusIndex", "onFocusIndexChanged")
+end sub
+
+'-------------------
+' EVENT HANDLERS
+' -------------------
+
+sub onFocusedChildChanged(event as Object)
+    m._itemCount = m.top.getChildCount()
+
+    if NOT m.top.hasFocus() then return
+
+    _focusTargetAtIndex(m._focusIndex)
+end sub
+
+sub onFocusIndexChanged(event as Object)
+    _focusTargetAtIndex(event.getData())
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _focusTargetAtIndex(_focusIndex as Integer)
+    target = m.top.getChild(_focusIndex)
+    target.setFocus(true)
+    m._focusIndex = _focusIndex
+end sub
+
+sub _canMoveFocus(direction as String, layoutDirection as String) as Boolean
+
+    if layoutDirection = "vert"
+        if direction = "up"
+            return m._focusIndex > 0
+        else if direction = "down"
+            return m._focusIndex < m._itemCount - 1
+        end if
+    else if layoutDirection = "horiz"
+        if direction = "left"
+            return m._focusIndex > 0
+        else if direction = "right"
+            return m._focusIndex < m._itemCount - 1
+        end if
+    end if
+
+    return false
+end sub
+
+' -------------------
+' KEY HANDLING
+' -------------------
+
+function onKeyEvent(key as String, press as Boolean) as Boolean
+    if press = false then return false
+
+    if _canMoveFocus(key, m.top.layoutDirection)
+        _focusTargetAtIndex(m._focusIndex + (key = "down" OR key = "right" ? 1 : -1))
+        return true
+    end if
+
+    if key = "OK"
+        m.top.selectedButtonId = m.top.getChild(m._focusIndex).id
+        return true
+    end if
+
+    return false
+end function
+

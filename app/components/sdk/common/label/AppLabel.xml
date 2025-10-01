@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="AppLabel" extends="Label">
+    <interface>
+        <field id="fontSize" type="integer" alias="font.size" />
+        <field id="fontStyle" type="string" />
+    </interface>
+
+    <children>
+        <Font id="font" role="font" />
+    </children>
+
+    <script type="text/brightscript" uri="./AppLabel.bs" />
+</component>

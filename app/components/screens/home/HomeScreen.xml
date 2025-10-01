@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="HomeScreen" extends="BaseScreen">
+    <children>
+        <RowList id="rowlist" />
+    </children>
+
+    <script type="text/brightscript" uri="./HomeScreen.bs" />
+</component>

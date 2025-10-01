@@ -1,0 +1,45 @@
+namespace App.Helpers.HTTP
+
+    sub makeRequest(method as String, url as String, options as Object, callback as Function)
+        if m._requestQueue = invalid
+            m._requestQueue = {}
+        end if
+
+        httpTask = CreateObject("roSGNode", "HttpRequestTask")
+
+        uuid = CreateObject("roDeviceInfo").getRandomUUID()
+        httpTask.setFields({
+            method: method
+            options: options
+            url: url
+            uuid: uuid
+        })
+
+        m._requestQueue[uuid] = {
+            task: httpTask
+            callback: callback
+        }
+
+        httpTask.observeFieldScoped("output", "App_Helpers_HTTP_onRequestComplete")
+
+        httpTask.control = "RUN"
+    end sub
+
+    sub onRequestComplete(event as Object)
+        httpTask = event.getRoSgNode()
+        httpTask.control = "STOP"
+        httpTask.unobserveFieldScoped("output")
+
+        request = m._requestQueue?[httpTask.uuid]
+
+        if request = invalid then return
+        if request.callback <> invalid
+            callback = request.callback ' magically restore callback scope so m.top refs work
+            callback(httpTask.output)
+        end if
+
+        m._requestQueue.delete(httpTask.uuid)
+    end sub
+
+end namespace
+

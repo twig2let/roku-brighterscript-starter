@@ -1,0 +1,16 @@
+namespace App.Utils.ObjectUtils
+
+    function shallowEqual(objectA as Object, objectB as Object) as Boolean
+        if objectA = invalid AND objectB = invalid then return true
+        if objectA = invalid OR objectB = invalid then return false
+        if objectA.count() <> objectB.count() then return false
+
+        for each key in objectA
+            if objectB.doesExist(key) = false then return false
+            if objectA[key] <> objectB[key] then return false
+        end for
+
+        return true
+    end function
+
+end namespace

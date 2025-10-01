@@ -1,0 +1,89 @@
+import "pkg:/components/sdk/helpers/RequestHelper.bs"
+import "pkg:/source/facades/RouterFacade.bs"
+import "pkg:/source/RouteDefintions.bs"
+import "pkg:/source/Theme.bs"
+
+sub init()
+    #if insert_tracker_task
+        m.trackerTask = m.top.createChild("TrackerTask")
+    #end if
+
+    m._dataLoaded = false
+    m._initialData = invalid
+    m._splashTimerFired = false
+
+    m.router = m.top.findNode("appRouter")
+    m.minimumSplashTimer = m.top.findNode("minimumSplashTimer")
+
+    m.minimumSplashTimer.observeFieldScoped("fire", "onMinimumSplashTimerFired")
+
+    _setGlobals()
+    _navigateToSplashScreen()
+    _loadData()
+end sub
+
+'-----------------
+' EVENT HANDLERS
+' -----------------
+
+sub onMinimumSplashTimerFired()
+    m._splashTimerFired = true
+    if m._dataLoaded then _navigateToHomeScreen(m._initialData)
+end sub
+
+'-----------------
+' PRIVATE METHODS
+' -----------------
+
+sub _setGlobals()
+    App.Navigation.Router.setGlobalRouter(m.global, m.router)
+
+    m.global.addFields({
+        theme: {
+            colors: App.Theme.COLORS
+            fonts: App.Theme.FONTS
+        }
+    })
+end sub
+
+sub _navigateToSplashScreen()
+    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.SPLASH)
+    _startMinimumSplashTimer()
+end sub
+
+sub _navigateToHomeScreen(data as Object)
+    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: data })
+end sub
+
+sub _startMinimumSplashTimer()
+    m.minimumSplashTimer.duration = App.Theme.MINIMUM_SPLASH_DURATION
+    m.minimumSplashTimer.control = "start"
+end sub
+
+sub _loadData()
+    App.Helpers.HTTP.makeRequest("GET", "https://api.tvmaze.com/shows", invalid, sub(response as Object)
+        if NOT response.ok
+            App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
+            return
+        end if
+
+        m._initialData = response.json
+        m._dataLoaded = true
+        if m._splashTimerFired then _navigateToHomeScreen(m._initialData)
+    end sub)
+end sub
+
+'-----------------
+' KEY HANDLING
+' -----------------
+
+function onKeyEvent(key as String, press as Boolean) as Boolean
+    if press = false return false
+
+    if key = "back"
+        App.Navigation.Router.goBack()
+        return true
+    end if
+
+    return false
+end function

@@ -1,0 +1,79 @@
+namespace App.Parsers.RowItemParser
+
+    const ROW_TITLES = [
+        "Critically Acclaimed"
+        "Family Favourites"
+        "New Releases"
+        "Popular Shows"
+        "Recommended for You"
+        "Top Picks"
+        "Trending Now"
+        "Watch It Again"
+    ]
+
+    function parse(data as Object) as Object
+        chunkedData = _chunkArray(data)
+
+        rootNode = createObject("roSgNode", "ContentNode")
+
+        for each row in chunkedData
+            rowNode = rootNode.createChild("ContentNode")
+            rowNode.setFields({
+                contentType: "Row",
+                title: _randomRowTitle()
+            })
+            for each item in row
+                rowNode.appendChild(_parseItem(item))
+            end for
+        end for
+
+        return rootNode
+    end function
+
+    function _parseItem(item as Object) as Object
+        itemNode = createObject("roSgNode", "ContentNode")
+        itemNode.id = item.id.toStr?() ?? ""
+        itemNode.addFields({
+            genres: item.genres ?? []
+            images: { portrait: item.image?.medium ?? "" }
+            name: item.name ?? ""
+            summary: item.summary ?? ""
+            type: item.type ?? ""
+        })
+
+        return itemNode
+    end function
+
+    ' Generate rows from the show data by chunking the array into smaller arrays
+    function _chunkArray(data as Object) as Object
+        chunks = []
+        if data = invalid then return chunks
+
+        chunkSize = 8
+        itemCount = data.count()
+        if itemCount = 0 then return chunks
+
+        for i = 0 to itemCount - 1 step chunkSize
+            chunk = []
+            blockEnd = i + chunkSize - 1
+            if blockEnd >= itemCount then blockEnd = itemCount - 1
+
+            for j = i to blockEnd
+                chunk.push(data[j])
+            end for
+
+            chunks.push(chunk)
+        end for
+
+        return chunks
+    end function
+
+    function _randomRowTitle() as String
+        total = ROW_TITLES.count()
+        index = int(rnd(0) * total)
+        if index >= total then index = total - 1
+
+        return ROW_TITLES[index]
+    end function
+
+end namespace

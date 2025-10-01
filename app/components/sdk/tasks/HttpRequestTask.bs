@@ -1,0 +1,12 @@
+import "pkg:/source/libs/RokuRequest.bs"
+
+sub init()
+    m.rokuRequest = new App.Libs.RokuRequest()
+
+    m.top.functionName = "makeRequest"
+end sub
+
+sub makeRequest(method = m.top.method as String, url = m.top.url as String, args = m.top.args = invalid as Object)
+    response = m.rokuRequest.request(method, url, args)
+    m.top.output = response
+end sub

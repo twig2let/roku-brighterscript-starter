@@ -1,0 +1,113 @@
+import "pkg:/components/screens/details/DetailsScreenStyle.bs"
+import "pkg:/components/sdk/helpers/RequestHelper.bs"
+import "pkg:/source/facades/RouterFacade.bs"
+import "pkg:/source/RouteDefintions.bs"
+import "pkg:/source/sdk/utils/ArrayUtils.bs"
+import "pkg:/source/sdk/utils/ViewUtils.bs"
+
+sub init()
+    m.style = App.Utils.ViewUtils.applyStyle(App.DetailsScreen.Style.build())
+    m.videoSource = {
+        url: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"
+        title: "Test Video"
+        streamformat: "hls"
+    }
+
+    m.extrasLabel = m.top.findNode("extrasLabel")
+    m.poster = m.top.findNode("poster")
+    m.showMetadataAnimation = m.top.findNode("showMetadataAnimation")
+    m.summaryLabel = m.top.findNode("summaryLabel")
+    m.titleLabel = m.top.findNode("titleLabel")
+    m.watchNowButton = m.top.findNode("watchNowButton")
+    m.focusLayoutGroup = m.top.findNode("focusLayoutGroup")
+
+    m.poster.observeFieldScoped("loadStatus", "onPosterLoadStatusChanged")
+    m.focusLayoutGroup.observeFieldScoped("selectedButtonId", "onSelectedButtonIdChanged")
+end sub
+
+' -------------------
+' EVENT HANDLERS
+' -------------------
+
+' @override
+sub onParamsChanged(event as Object)
+    params = event.getData()
+
+    m.top.setFocus(true) ' setFocus on the screen to enable key handling whilst loading data
+
+    _loadShowDetails(params.data.id)
+end sub
+
+' @override
+sub onWillDestroyChanged(event as Object)
+    if m.showMetadataAnimation.state = "running" then m.showMetadataAnimation.control = "stop"
+end sub
+
+sub onSelectedButtonIdChanged(event as Object)
+    if event.getData() = "watchNowButton" then _navigateToVideoPlayer()
+end sub
+
+sub onPosterLoadStatusChanged(event as Object)
+    loadStatus = event.getData()
+
+    if loadStatus = "ready" OR loadStatus = "error"
+        m.showMetadataAnimation.control = "start"
+    end if
+end sub
+
+' -------------------
+' PRIVATE METHODS
+' -------------------
+
+sub _loadShowDetails(showId as String)
+    App.Helpers.HTTP.makeRequest("GET", `https://api.tvmaze.com/shows/${showId}?embed[]=images`, invalid, sub(response as Object)
+        if NOT response.ok
+            App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
+            return
+        end if
+
+        _buildView(response.json)
+
+        m.focusLayoutGroup.setFocus(true)
+    end sub)
+end sub
+
+sub _buildView(showDetails as Object)
+    m.poster.imageUrl = _getBackgroundImage(showDetails._embedded?.images ?? [])
+
+    m.titleLabel.text = showDetails.name ?? ""
+    m.summaryLabel.text = App.Utils.ViewUtils.stripHtmlTags(showDetails.summary ?? "")
+    m.extrasLabel.text = App.Utils.ViewUtils.createExtrasString([
+        showDetails.genres?.join?(", ") ?? ""
+        showDetails.network?.name ?? ""
+        showDetails.rating?.average <> invalid ? `Rated: ${cint(showDetails.rating?.average ?? 0)}/10` : ""
+    ])
+end sub
+
+function _getBackgroundImage(images as Object) as String
+    backgroundImages = App.Utils.ArrayUtils.filterArray(images, function(image as Object, index as Integer) as Boolean
+        return image.type = "background"
+    end function)
+
+    return _findBackgroundImageUrl(backgroundImages)
+end function
+
+function _findBackgroundImageUrl(backgroundImages as Object) as String
+
+    for each image in backgroundImages
+        ' Find the first image with 1920 (FHD) width and just use that'n
+        if image.resolutions?.original?.width = 1920
+            return image.resolutions.original.url
+        end if
+    end for
+
+    ' Otherwise return the last background image in the list OR an empty string if none exist
+    return backgroundImages[backgroundImages.count() - 1]?.resolutions?.original?.url ?? ""
+end function
+
+sub _navigateToVideoPlayer()
+    contentMetadata = createObject("RoSGNode", "ContentNode")
+    contentMetadata.setFields(m.videoSource)
+
+    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.VIDEO, { source: contentMetadata })
+end sub

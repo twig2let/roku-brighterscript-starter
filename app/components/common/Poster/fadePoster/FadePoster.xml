@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="FadePoster" extends="Group">
+    <interface>
+        <field id="height" type="integer" />
+        <field id="imageUrl" type="string" alias="poster.uri" />
+        <field id="loadStatus" type="string" alias="poster.loadStatus" />
+        <field id="width" type="integer" />
+    </interface>
+
+    <children>
+        <Poster id="poster" opacity="0"/>
+
+        <!-- TIMERS AND ANIMATIONS -->
+        <Animation id="fadeAnimation" easeFunction="linear" duration="0.6">
+            <FloatFieldInterpolator key="[0.0, 1.0]" keyValue="[0.0, 1.0]" fieldToInterp="poster.opacity" />
+        </Animation>
+    </children>
+
+    <script type="text/brightscript" uri="./FadePoster.bs" />
+</component>

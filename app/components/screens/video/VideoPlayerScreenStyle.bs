@@ -1,0 +1,10 @@
+namespace App.VideoPlayerScreen.Style
+
+    const NODE_MAP = {
+        video: {
+            width: 1920
+            height: 1080
+        }
+    }
+
+end namespace

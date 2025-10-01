@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="DetailsScreen" extends="BaseScreen">
+    <children>
+        <FadePoster id="poster" />
+        <Poster id="dimmer" />
+
+        <LayoutGroup id="metadataLayoutGroup">
+            <AppLabel id="titleLabel" />
+            <AppLabel id="summaryLabel" />
+            <AppLabel id="extrasLabel" />
+        </LayoutGroup>
+
+        <FocusLayoutGroup id="focusLayoutGroup">
+            <AppButton id="watchNowButton" text="Watch Now" />
+        </FocusLayoutGroup>
+
+
+        <!-- ANIMATIONS -->
+        <ParallelAnimation id="showMetadataAnimation">
+            <Animation id="metadataFadeInAnimation">
+                <FloatFieldInterpolator id="metadataFadeInInterpolator" fieldToInterp="metadataLayoutGroup.opacity" />
+            </Animation>
+
+            <Animation id="metadataMoveUpAnimation">
+                <Vector2DFieldInterpolator id="metadataMoveUpInterpolator" fieldToInterp="metadataLayoutGroup.translation" />
+            </Animation>
+
+            <Animation id="focusLayoutGroupFadeInAnimation">
+                <FloatFieldInterpolator id="focusLayoutGroupFadeInInterpolator" fieldToInterp="focusLayoutGroup.opacity" />
+            </Animation>
+        </ParallelAnimation>
+    </children>
+
+    <script type="text/brightscript" uri="./DetailsScreen.bs" />
+</component>

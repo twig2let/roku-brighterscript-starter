@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="BaseScreen" extends="Group">
+    <interface>
+        <!-- inputs -->
+        <field id="name" type="string" />
+        <field id="params" type="assocArray" />
+        <field id="willDestroy" type="boolean" />
+    </interface>
+
+    <script type="text/brightscript" uri="./BaseScreen.bs" />
+</component>

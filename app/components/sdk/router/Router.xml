@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component name="Router" extends="Group">
+    <interface>
+        <function name="navigateTo" />
+        <function name="goBack" />
+    </interface>
+
+    <children>
+        <Group id="routeContainer" />
+    </children>
+
+    <script type="text/brightscript" uri="./Router.bs" />
+</component>

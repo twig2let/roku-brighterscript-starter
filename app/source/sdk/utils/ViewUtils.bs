@@ -1,0 +1,38 @@
+namespace App.Utils.ViewUtils
+
+    function applyStyle(style = invalid as Object) as Object
+        if style = invalid then return invalid
+
+        for each item in style.items()
+            if item.key = "top"
+                m.top.setFields(item.value)
+                goto nextKey
+            end if
+
+            _target = m.top.findNode(item.key)
+            if type(_target) = "roSGNode" then _target.setFields(item.value)
+
+            nextKey:
+        end for
+
+        return style
+    end function
+
+    function stripHtmlTags(text as String) as String
+        if text = "" then return text
+
+        regex = CreateObject("roRegex", "<[^>]*>", "i")
+
+        return regex.replaceAll(text, "")
+    end function
+
+    function createExtrasString(stringParts as Object) as String
+        filteredParts = []
+        for each str in stringParts
+            if str <> "" then filteredParts.push(str)
+        end for
+
+        return filteredParts.join("  |  ")
+    end function
+
+end namespace

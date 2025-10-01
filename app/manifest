@@ -1,0 +1,22 @@
+title=Roku Brighterscript Template App
+
+rsg_version=1.2
+
+major_version=0
+minor_version=0
+build_version=0
+
+ui_resolutions=fhd
+uri_resolution_autosub=$$RES$$,720,720,1080
+
+mm_icon_focus_fhd=pkg:/images/icons/icon_focus_fhd.png
+mm_icon_focus_hd=pkg:/images/icons/icon_focus_hd.png
+mm_icon_focus_sd=pkg:/images/icons/icon_focus_sd.png
+
+splash_screen_fhd=pkg:/images/splash/splash_fhd.png
+splash_screen_hd=pkg:/images/splash/splash_hd.png
+splash_screen_sd=pkg:/images/splash/splash_sd.png
+
+splash_min_time=0
+
+bs_const=insert_tracker_task=true

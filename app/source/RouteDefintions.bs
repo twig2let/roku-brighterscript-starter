@@ -1,0 +1,38 @@
+namespace App.Constants.RouteDefintions
+
+    const SPLASH = {
+        addToHistory: false
+        canGoBack: false
+        component: "SplashScreen"
+        name: "splash route"
+    }
+
+    const HOME = {
+        addToHistory: true
+        canGoBack: false
+        component: "HomeScreen"
+        name: "home route"
+    }
+
+    const ERROR = {
+        addToHistory: false
+        canGoBack: false
+        component: "ErrorScreen"
+        name: "error route"
+    }
+
+    const DETAILS = {
+        addToHistory: true
+        canGoBack: true
+        component: "DetailsScreen"
+        name: "details route"
+    }
+
+    const VIDEO = {
+        addToHistory: false
+        canGoBack: true
+        component: "VideoPlayerScreen"
+        name: "video player route"
+    }
+
+end namespace
