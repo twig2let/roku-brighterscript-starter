@@ -1,6 +1,23 @@
+<img src="docs/git_banner.png" alt="Roku BrighterScript Starter logo" width="800">
+
+
 ## Description
 
-A very basic Roku application!
+This template bootstraps a Roku channel built with BrighterScript, providing a ready-to-run app, tooling, and deployment workflow.
+
+## Features
+
+- Node.js-based pipeline to
+    - compile and validate BrighterScript code
+    - insert the RALE tracker task
+- Simple stack-router component for navigating between screens
+- BrighterScript class-based implementation of [roku-requests](https://github.com/rokucommunity/roku-requests)
+- Basic Roku application that uses the free [TVMAZE](https://www.tvmaze.com/api) public API
+    - Splash screen
+    - Home screen
+    - Details screen
+    - Video screen
+    - Error screen
 
 ## Prerequisites
 
@@ -14,36 +31,44 @@ This codebase __only supports__ [Visual Studio Code](https://code.visualstudio.c
 $ npm install
 ```
 
-2. Install the [recommended](./.vscode/extensions.json) VSC extensions
-
-3. Create a `.env` with the following in the root of the project:
+2. Install the [recommended](./.vscode/extensions.json) VS Code extensions:
 
 ```
-ROKU_IP={YOUR.ROKU.IP}
+"datasert.vscode-texty",
+"eamodio.gitlens",
+"ibm.output-colorizer",
+"mikestead.dotenv",
+"redhat.vscode-xml",
+"rokucommunity.brightscript",
+"shardulm94.trailing-spaces"
+```
+
+3. Create a `.env` file in the project root with the following values:
+
+```
+ROKU_IP=192.168.0.4
 ROKU_DEV_USER=rokudev
 ROKU_DEV_PASSWORD=rokudev
 ```
 
 ## Project Structure
 
-- `/.vscode` - contains the vscode configuration files
-- `/manifest` - contains the code for each enviroment's manifest
-- `/pipeline` - pipeline code for transpiling Brighterscript and other things
-- `/app` - contains the project source code
+- `/.vscode` - contains the VS Code configuration files
+- `/pipeline` - pipeline code for transpiling BrighterScript and other things
+- `/app` - contains the BrighterScript project source code
 
 ## Build Process
 
 ### Development
 
-The app is deployed using the VSC `debug` launch task. See [debugging in VSC](https://code.visualstudio.com/docs/editor/debugging).
+The VS Code `debug` launch task does the following:
 
-The VSC `debug` launch task does the following:
-
-1. Triggers the `prevsc` package.json, which transpiles any BrighterScript `/src` code
-1. The transpiled (`/app` code is copied to `out/transpiled`
-1. The app is deployed via the BrightScript Language extenstion
+1. Triggers the `prevsc` package.json script, which transpiles any BrighterScript code in `/src`
+2. Copies the transpiled `/app` code to `out/transpiled`
+3. Deploys the app via the VS Code BrightScript language extension
 
 ## BrighterScript
 
-Any `.bs` files in the `/app` directory will be transpiled.
+Any `.bs` files in the `/app` directory are transpiled.
 
+Check out the BrighterScript documentation [here](https://github.com/rokucommunity/brighterscript).
