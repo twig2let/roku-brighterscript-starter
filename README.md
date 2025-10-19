@@ -59,7 +59,7 @@ npm run roku-deploy
 
 ## 📝 VSCode Brightscript Extension
 
-Supported out-the-box! This [Roku community extension](https://rokucommunity.github.io/vscode-brightscript-language/index.html) is jam-packed with features, including:
+Supported out-of-the-box! This [Roku community extension](https://rokucommunity.github.io/vscode-brightscript-language/index.html) is jam-packed with features, including:
 
 - Full debugger support including breakpoints, variable inspection, and more
 - Integrated telnet logs and interactive console
