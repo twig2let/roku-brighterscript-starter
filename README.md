@@ -25,8 +25,8 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 
 ## ✨ Features
 
-| Feature                          | Description                                                                                       |
-| -------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Feature | Description |
+| --- | --- |
 | ⚡ **BrighterScript Support**     | Modern TypeScript-like language for Roku (classes, interfaces, constants, enums, namespaces, null-Coalescing Operator, transpiled to BrightScript) |
 | 🛠 **Node Build Pipeline**       | Transpilation, validation, packaging, and deployment directly to a Roku device                    |
 | 🧭 **Stack-Based Router**        | Navigate between screens with full state and history management                                   |
