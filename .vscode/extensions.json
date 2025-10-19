@@ -1,7 +1,5 @@
 {
     "recommendations": [
-        "datasert.vscode-texty",
-        "eamodio.gitlens",
         "ibm.output-colorizer",
         "mikestead.dotenv",
         "redhat.vscode-xml",
