@@ -1,7 +1,7 @@
 {
-    "name": "Roku Brighterscript Template",
+    "name": "Roku BrighterScript Template",
     "version": "1.0.0",
-    "description": "A template for Roku development using Brighterscript.",
+    "description": "A template for Roku development using BrighterScript.",
     "license": "MIT",
     "private": true,
     "scripts": {
