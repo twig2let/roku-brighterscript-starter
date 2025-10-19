@@ -52,7 +52,7 @@ sub _navigateToSplashScreen()
 end sub
 
 sub _navigateToHomeScreen(data as Object)
-    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR, { data: data })
+    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: data })
 end sub
 
 sub _startMinimumSplashTimer()
