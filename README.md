@@ -1,8 +1,27 @@
-<img src="docs/git_banner.png" alt="Roku BrighterScript Starter banner" width="800">
+<img src="assets/git_banner.png" alt="Roku BrighterScript Starter banner" width="800">
+
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+![Roku](https://img.shields.io/badge/platform-Roku-purple.svg)
+[![Powered by BrighterScript](https://img.shields.io/badge/powered_by-BrighterScript-3178C6.svg)](https://github.com/rokucommunity/brighterscript)
 
 A production-ready starter kit for building modern Roku apps using [BrighterScript](https://github.com/rokucommunity/brighterscript), NodeJS tooling, and a modular, scalable architecture.
 
 > 🚀 Build Roku apps the modern way - with TypeScript-like BrighterScript, navigation state, debugging tools, and an opinionated project structure that’s ready for production from day one.
+
+## 📸 Screenshots
+
+<p align="left">
+  <table>
+    <tr>
+      <td align="center"><strong>Home Screen</strong><br><img src="./assets/home_1280x720.jpg" width="400"></td>
+      <td align="center"><strong>Details Screen</strong><br><img src="./assets/details_1280x720.jpg" width="400"></td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Playback Screen</strong><br><img src="./assets/player_1280x720.jpg" width="400"></td>
+      <td align="center"><strong>Error Screen</strong><br><img src="./assets/error_1280x720.jpg" width="400"></td>
+    </tr>
+  </table>
+</p>
 
 ## ✨ Features
 
@@ -125,3 +144,15 @@ Contributions are welcome! Feel free to open issues, submit PRs, or suggest feat
 ## 📄 License
 
 MIT License — free to use, extend, and commercialise.
+
+
+## Frequently Asked Questions
+
+**Is this starter kit production ready?**
+Yes — it's designed for commercial use, agencies, and Roku channels that need reliability and scalability.
+
+**What is the difference between BrightScript and BrighterScript?**
+BrighterScript is a modern superset of BrightScript with TypeScript-like syntax, classes, types, and tooling support.
+
+**Can I use this starter to build a Roku channel for my business or client?**
+Absolutely. This repository is intended to be a production foundation for real-world Roku apps.
