@@ -5,7 +5,8 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "vsc": "node ./pipeline/development-pipeline"
+        "vsc": "node ./pipeline/development-pipeline",
+        "roku-deploy": "node ./scripts/roku-deploy.js"
     },
     "engines": {
         "node": ">=16.0.0",
@@ -15,6 +16,7 @@
         "brighterscript": "^0.68.4",
         "dotenv": "^16.4.7",
         "fs-extra": "^11.1.1",
-        "lodash": "^4.17.21"
+        "lodash": "^4.17.21",
+        "roku-deploy": "^3.13.0"
     }
 }
