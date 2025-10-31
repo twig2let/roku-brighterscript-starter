@@ -2251,6 +2251,8 @@ Function FW_AsString(input As Dynamic) As String
     Else If FW_IsHttpAgent(input) Then
         Return ""
     End If
+
+    Return ""
 End Function
 
 '*************************************************
