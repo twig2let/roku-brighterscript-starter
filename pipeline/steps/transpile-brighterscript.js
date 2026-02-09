@@ -3,11 +3,17 @@ const { ProgramBuilder, DiagnosticSeverity } = require('brighterscript');
 const bsConfig = require('../../bsconfig.json');
 
 module.exports = async () => {
-    console.log('Running: Transpiling BrighterScript...');
+    console.log('[Pipeline|Info] Running: Transpiling BrighterScript...');
 
     try {
         const builder = new ProgramBuilder();
-        await builder.run(bsConfig).finally(() => {
+        const isProduction = process.env.ENV === 'prod';
+        const config = {
+            ...bsConfig,
+            sourceMap: isProduction ? false : bsConfig.sourceMap
+        };
+
+        await builder.run(config).finally(() => {
             const diagnostics = groupBy(builder.program.getDiagnostics(), 'severity');
             const errors = diagnostics[DiagnosticSeverity.Error] || { length: 0 };
             if (errors.length > 0) {
@@ -18,5 +24,5 @@ module.exports = async () => {
         throw new Error('Failed to transpile BrighterScript');
     }
 
-    console.log('Finished: Transpiling BrighterScript');
+    console.log('[Pipeline|Info] Finished: Transpiling BrighterScript');
 };

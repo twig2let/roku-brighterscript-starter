@@ -56,6 +56,32 @@ npm run roku-deploy
 
 👉 See the [VSCode Brightscript Extension](#-vscode-brightscript-extension) section for a (better) alternative deployment method
 
+## 🧰 Build & Release
+
+Builds are driven by `ENV`:
+
+```sh
+# Development build (source maps on, TrackerTask included)
+ENV=dev npm run build
+
+# Production build (source maps off, minified, no TrackerTask)
+ENV=prod npm run build
+
+# Shortcut for prod builds
+npm run build:prod
+```
+
+Release assets are created from `out/transpiled`:
+
+```sh
+npm run release
+```
+
+Release workflow notes:
+- The GitHub Release workflow runs on published releases.
+- The release tag must match `package.json` version (e.g. `1.2.3` or `v1.2.3`).
+- The app manifest version (`major_version.minor_version.build_version`) must match `package.json`.
+
 
 ## 📝 VSCode Brightscript Extension
 

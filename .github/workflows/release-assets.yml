@@ -1,0 +1,49 @@
+name: Release assets
+run-name: ${{ github.ref_name }}
+
+permissions:
+  contents: write
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Validate release tag
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          EXPECTED="v${VERSION}"
+          TAG="${GITHUB_REF_NAME}"
+          if [ "${TAG}" != "${VERSION}" ] && [ "${TAG}" != "${EXPECTED}" ]; then
+            echo "Release tag must match ${VERSION} or ${EXPECTED}, got ${TAG}"
+            exit 1
+          fi
+      - name: Validate manifest version
+        run: |
+          node -e "const fs=require('fs');const pkg=require('./package.json');const manifest=fs.readFileSync('./app/manifest','utf8');const get=(k)=>{const m=manifest.match(new RegExp('^'+k+'=([0-9]+)$','m'));return m?m[1]:null;};const major=get('major_version');const minor=get('minor_version');const build=get('build_version');if([major,minor,build].some(v=>v===null)){console.error('manifest missing major/minor/build version');process.exit(1);}const parts=pkg.version.split('-')[0].split('.');if(parts.length<3){console.error('package.json version must be semver (x.y.z)');process.exit(1);}const [pMajor,pMinor,pBuild]=parts;const manifestVersion=`${major}.${minor}.${build}`;const pkgVersion=`${pMajor}.${pMinor}.${pBuild}`;if(manifestVersion!==pkgVersion){console.error(`manifest version ${manifestVersion} must match package.json ${pkgVersion}`);process.exit(1);}console.log(`manifest version ${manifestVersion} matches package.json`);"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (prod)
+        run: npm run build:prod
+
+      - name: Package release zips
+        run: npm run release
+
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "releases/*.zip"

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const rokuDeploy = require('roku-deploy');
-const runDevelopmentPipeline = require('../pipeline/development-pipeline');
+const runDevelopmentPipeline = require('../pipeline/debug-pipeline');
 
 async function deployWithPipeline() {
     await runDevelopmentPipeline;
