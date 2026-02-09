@@ -38,6 +38,7 @@ sub navigateTo(route as Object, params = {} as Object, routeState = invalid as O
     m._params = params
 
     m._isNavigating = false
+    m.top.currentRoute = route
 end sub
 
 sub goBack(params = invalid as Object)
