@@ -5,7 +5,7 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "vsc": "node ./pipeline/development-pipeline",
+        "debug": "node ./scripts/debug.js",
         "roku-deploy": "node ./scripts/roku-deploy.js"
     },
     "engines": {
