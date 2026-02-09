@@ -19,7 +19,7 @@ end sub
 
 ' @override
 sub onParamsChanged(event as Object)
-    buildView(event.getData())
+    _buildView(event.getData())
 
     m.rowList.setFocus(true)
 end sub
@@ -43,7 +43,7 @@ end sub
 ' PRIVATE METHODS
 ' -------------------
 
-sub buildView(params as Object)
+sub _buildView(params as Object)
     _createRowlist(params.data)
 
     ' Restore item focus, if it's available
