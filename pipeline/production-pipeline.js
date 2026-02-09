@@ -13,17 +13,18 @@ const steps = [
 ];
 
 module.exports = (async () => {
-    console.log('[Pipeline|Info] Running production build pipeline:');
+    console.log('[Pipeline] Running production build pipeline:');
 
     try {
         for (const step of steps) {
-            console.log(`[Pipeline|Info] Step: ${step.name}...\n`);
+            console.log(`[Pipeline] Step: ${step.name}...\n`);
             await step.fn();
         }
     } catch (err) {
-        console.error('[Pipeline|Error]', err.message);
         await fs.remove('out');
-
-        throw new Error('Production build pipeline failed.');
+        if (err instanceof Error) {
+            throw err;
+        }
+        throw new Error('Build pipeline failed.');
     }
 })();

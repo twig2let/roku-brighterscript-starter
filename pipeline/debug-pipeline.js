@@ -16,18 +16,18 @@ module.exports = (async () => {
     const buildMode = process.env.ENV === 'prod' ? 'prod' : 'dev';
     const buildLabel = buildMode === 'prod' ? 'production' : 'development';
 
-    console.log(`[Pipeline|Info] Running ${buildLabel} build pipeline:`);
+    console.log(`[Pipeline] Running ${buildLabel} build pipeline:`);
 
     try {
         for (const step of steps) {
-            console.log(`[Pipeline|Info] Step: ${step.name}...\n`);
+            console.log(`[Pipeline] Step: ${step.name}...\n`);
             await step.fn();
         }
     } catch (err) {
-        const buildLabel = buildMode === 'prod' ? 'Production' : 'Development';
-        console.error('[Pipeline|Error]', err.message);
         await fs.remove('out');
-
-        throw new Error(`${buildLabel} build pipeline failed.`);
+        if (err instanceof Error) {
+            throw err;
+        }
+        throw new Error('Build pipeline failed.');
     }
 })();
