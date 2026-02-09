@@ -5,7 +5,11 @@
     "license": "MIT",
     "private": true,
     "scripts": {
+        "build": "node ./scripts/build.js",
+        "build:debug": "ENV=dev node ./scripts/build.js",
+        "build:prod": "ENV=prod node ./scripts/build.js",
         "debug": "node ./scripts/debug.js",
+        "release": "node ./scripts/release.js",
         "roku-deploy": "node ./scripts/roku-deploy.js"
     },
     "engines": {

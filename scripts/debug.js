@@ -2,7 +2,7 @@
     try {
         await require('../pipeline/debug-pipeline');
     } catch (err) {
-        console.error('[Debug|Error]', err.message);
+        console.error('[Pipeline|Error]', err.message);
         process.exitCode = 1;
     }
 })();

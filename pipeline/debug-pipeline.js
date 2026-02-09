@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs-extra');
 
 const steps = [
     {
@@ -15,11 +16,11 @@ module.exports = (async () => {
     const buildMode = process.env.ENV === 'prod' ? 'prod' : 'dev';
     const buildLabel = buildMode === 'prod' ? 'production' : 'development';
 
-    console.log(`Running ${buildLabel} build pipeline:`);
+    console.log(`[Pipeline|Info] Running ${buildLabel} build pipeline:`);
 
     try {
         for (const step of steps) {
-            console.log(`Step: ${step.name}...\n`);
+            console.log(`[Pipeline|Info] Step: ${step.name}...\n`);
             await step.fn();
         }
     } catch (err) {

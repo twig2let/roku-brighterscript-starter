@@ -4,7 +4,7 @@ module.exports = async () => {
     const trackerTaskPath = './TrackerTask-3.2.0.xml';
     const targetPath = './out/transpiled/components/TrackerTask.xml';
 
-    console.log('Running: Insert Tracker Task...');
+    console.log('[Pipeline|Info] Running: Insert Tracker Task...');
 
     try {
         await fs.copy(trackerTaskPath, targetPath);
@@ -12,5 +12,5 @@ module.exports = async () => {
         throw new Error('Failed to insert Tracker Task');
     }
 
-    console.log('Finished: Insert Tracker Task');
+    console.log('[Pipeline|Info] Finished: Insert Tracker Task');
 };

@@ -10,7 +10,7 @@
             "envFile": "${workspaceFolder}/.env",
             "host": "${env:ROKU_IP}",
             "password": "${env:ROKU_DEV_PASSWORD}",
-            "preLaunchTask": "Build",
+            "preLaunchTask": "Debug",
             "stopOnEntry": false,
             "files": [
                 "*",
