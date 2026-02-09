@@ -66,13 +66,13 @@ sub _loadShowDetails(showId as String)
             return
         end if
 
-        _buildView(response.json)
+        buildView(response.json)
 
         m.focusLayoutGroup.setFocus(true)
     end sub)
 end sub
 
-sub _buildView(showDetails as Object)
+sub buildView(showDetails as Object)
     m.poster.imageUrl = _getBackgroundImage(showDetails._embedded?.images ?? [])
 
     m.titleLabel.text = showDetails.name ?? ""

@@ -19,7 +19,9 @@ end sub
 
 ' @override
 sub onParamsChanged(event as Object)
-    _buildView(event.getData())
+    buildView(event.getData())
+
+    m.rowList.setFocus(true)
 end sub
 
 sub onRowItemSelectedChanged(event as Object)
@@ -41,13 +43,11 @@ end sub
 ' PRIVATE METHODS
 ' -------------------
 
-sub _buildView(params as Object)
+sub buildView(params as Object)
     _createRowlist(params.data)
 
     ' Restore item focus, if it's available
     m.rowList.jumpToRowItem = params.routeState?.rowItemSelected ?? [0, 0]
-
-    m.rowList.setFocus(true)
 end sub
 
 sub _createRowlist(data as Object)

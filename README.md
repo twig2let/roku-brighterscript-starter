@@ -119,7 +119,7 @@ App.Helpers.HTTP.makeRequest("GET", "https://api.tvmaze.com/shows", invalid, sub
         return
     end if
 
-    _buildView(response.json)
+    buildView(response.json)
 end sub)
 ```
 
