@@ -30,6 +30,8 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 | ⚡ **BrighterScript Support**     | Modern TypeScript-like language for Roku (classes, interfaces, constants, enums, namespaces, null-Coalescing Operator, transpiled to BrightScript) |
 | 🛠 **Node Build Pipeline**       | Transpilation, validation, packaging, and deployment directly to a Roku device                    |
 | 🧭 **Stack-Based Router**        | Navigate between screens with full state and history management                                   |
+| 📣 **Global Event Bus**          | Lightweight publish/subscribe for app-wide events without tight coupling                          |
+| 🚪 **Exit Confirmation Modal**   | Back‑key exit confirmation when there is no navigation history                                     |
 | 🌐 **HTTP Helper**               | Built-in class for clean, reusable API calls                                                      |
 | 🧩 **Modular Project Structure** | Screens and components separated for maintainability and scale                                    |
 | 🧪 **RALE Debug Integration**    | Automatically bundles Roku’s [debug extension](https://developer.roku.com/en-gb/docs/developer-program/dev-tools/rale-tutorial.md) for advanced inspection       |
@@ -134,6 +136,28 @@ Example usage:
 
 ```brs
 App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: viewData })
+```
+
+## 📣 Event Bus
+
+The app includes a global EventBus for decoupled, app‑wide events:
+
+```brs
+SDK.Core.EventBus.on("player:time", sub(payload)
+    ?"time ms = "; payload.ms
+end sub)
+
+SDK.Core.EventBus.emit("player:time", { ms: 12345 })
+```
+
+## 🚪 Exit Confirmation
+
+When the user presses **Back** and there is no navigation history, the app shows an exit confirmation modal.
+The modal emits events via the EventBus:
+
+```brs
+SDK.Core.EventBus.emit(App.Constants.Events.EXIT_APP)
+SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
 ```
 
 ## 🌐 HTTP Helper Example
