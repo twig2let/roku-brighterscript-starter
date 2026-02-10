@@ -1,0 +1,4 @@
+namespace App.Constants.Events
+    const CLOSE_EXIT_CONFIRMATION = "closeExitConfirmation"
+    const EXIT_APP = "exitApp"
+end namespace
