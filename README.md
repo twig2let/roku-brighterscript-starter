@@ -108,6 +108,7 @@ Just run the __Debug__ launch task in the VSCode IDE.
 │   ├─ libs/ # Shared libraries/helpers
 │   ├─ parsers/ # Data parsing/normalisation logic
 │   └─ sdk/ # Framework-grade non UI related code
+│     └─ core/ # Core utilities (EventBus, etc.)
 ├─ pipeline/ # Build/deployment pipeline scripts
 └- bsconfig.json # BrighterScript config
 ```
