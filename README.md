@@ -15,7 +15,7 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 | <img src="./assets/home_1280x720.jpg" width="400"> | <img src="./assets/details_1280x720.jpg" width="400"> |
 | Playback Screen | Error Screen |
 | <img src="./assets/player_1280x720.jpg" width="400"> | <img src="./assets/error_1280x720.jpg" width="400"> |
-| Exit Confirmation |  |
+| Exit Confirmation Modal |  |
 | <img src="./assets/exit_confirmation_1280x720.jpg" width="400"> |  |
 
 ## ✨ Features
@@ -146,7 +146,7 @@ end sub)
 SDK.Core.EventBus.emit("player:time", { ms: 12345 })
 ```
 
-## 🚪 Exit Confirmation
+## 🚪 Exit Confirmation Modal
 
 When the user presses **Back** and there is no navigation history, the app shows an exit confirmation modal.
 The modal emits events via the EventBus:
