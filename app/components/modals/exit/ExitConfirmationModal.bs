@@ -36,6 +36,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 
     if key = "back"
         SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+        
         return true
     end if
 
