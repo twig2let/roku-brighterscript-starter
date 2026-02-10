@@ -1,0 +1,43 @@
+import "pkg:/components/modals/exit/ExitConfirmationModalStyle.bs"
+import "pkg:/source/constants/Events.bs"
+import "pkg:/source/sdk/core/EventBus.bs"
+import "pkg:/source/sdk/utils/ViewUtils.bs"
+
+sub init()
+    m.style = App.Utils.ViewUtils.applyStyle(App.ExitConfirmationModal.Style.build())
+
+    m.buttonsGroup = m.top.findNode("buttonsGroup")
+
+    m.buttonsGroup.observeFieldScoped("selectedButtonId", "onSelectedButtonChanged")
+end sub
+
+'----------------------
+' INTERFACE FUNCTIONS
+'----------------------
+
+function setFocus(focused as Boolean) as Boolean
+    m.buttonsGroup.setFocus(true)
+end function
+
+sub onSelectedButtonChanged(event as Object)
+    if event.getData() = "yesButton"
+        SDK.Core.EventBus.emit(App.Constants.Events.EXIT_APP)
+    else
+        SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+    end if
+end sub
+
+' -------------------
+' KEY HANDLING
+' -------------------
+
+function onKeyEvent(key as String, press as Boolean) as Boolean
+    if press = false then return false
+
+    if key = "back"
+        SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+        return true
+    end if
+
+    return true
+end function

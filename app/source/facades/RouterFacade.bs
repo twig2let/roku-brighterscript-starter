@@ -22,15 +22,25 @@ namespace App.Navigation.Router
         router@.navigateTo(route, params, routeState)
     end sub
 
-    sub goBack(params = invalid as Object)
+    function goBack(params = invalid as Object) as Boolean
         router = _getRouter()
         if router = invalid
             print "[RouterFacade] Router not initialised"
-            return
+            return false
         end if
 
-        router@.goBack()
-    end sub
+        return router@.goBack()
+    end function
+
+    function setFocus(focused as Boolean) as Boolean
+        router = _getRouter()
+        if router = invalid
+            print "[RouterFacade] Router not initialised"
+            return false
+        end if
+
+        return router@.setFocus(focused)
+    end function
 
     ' -------------------
     ' PRIVATE METHODS

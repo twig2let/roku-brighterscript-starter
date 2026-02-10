@@ -6,6 +6,9 @@
         <field id="name" type="string" />
         <field id="params" type="assocArray" />
         <field id="willDestroy" type="boolean" />
+
+        <!-- functions -->
+        <function name="setFocus" />
     </interface>
 
     <script type="text/brightscript" uri="./BaseScreen.bs" />

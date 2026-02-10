@@ -1,0 +1,28 @@
+namespace App.ExitConfirmationModal.Style
+
+    function build(theme = m.global.theme as Object, options = invalid as Object) as Object
+
+        return {
+            yesButton: {
+                focusBorderColor: theme.COLORS.PRIMARY
+                foregroundColor: "0xffffff"
+                fontStyle: {
+                    color: "0x000000"
+                    fontSize: 28
+                    fontStyle: "MEDIUM"
+                }
+            }
+            noButton: {
+                focusBorderColor: theme.COLORS.PRIMARY
+                foregroundColor: "0xffffff"
+                fontStyle: {
+                    color: "0x000000"
+                    fontSize: 28
+                    fontStyle: "MEDIUM"
+                }
+            }
+        }
+
+    end function
+
+end namespace
