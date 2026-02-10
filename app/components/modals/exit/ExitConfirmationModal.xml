@@ -6,10 +6,10 @@
     <children>
         <Rectangle id="dimmer" width="1920" height="1080" color="#000000" />
 
-        <Poster id="logo" width="762" height="511" translation="[579, 90]" uri="pkg:/images/logo.png" />
-        <AppLabel id="message" width="1920" translation="[0, 634]" text="Leaving so soon?" fontStyle="BOLD" fontSize="87" color="#FFFFFF" horizAlign="center" />
+        <Poster id="logo" uri="pkg:/images/logo.png" />
+        <AppLabel id="message" text="Leaving so soon?" fontStyle="BOLD" color="#FFFFFF" horizAlign="center" />
 
-        <FocusLayoutGroup id="buttonsGroup" itemSpacings="[54]" translation="[807, 805]" vertAlignment="top" horizAlignment="left" layoutDirection="horiz">
+        <FocusLayoutGroup id="buttonsGroup" vertAlignment="top" horizAlignment="left" layoutDirection="horiz">
             <AppButton id="yesButton" text="Yeah, I'm done" />
             <AppButton id="noButton" text="No, I want more" />
         </FocusLayoutGroup>

@@ -3,6 +3,20 @@ namespace App.ExitConfirmationModal.Style
     function build(theme = m.global.theme as Object, options = invalid as Object) as Object
 
         return {
+            logo: {
+                width: 300
+                height: 372
+                translation: [300, 300]
+            }
+            message: {
+                width: 1920
+                translation: [90, 400]
+                fontSize: 87
+            }
+            buttonsGroup: {
+                itemSpacings: 54
+                translation: [690, 672]
+            }
             yesButton: {
                 focusBorderColor: theme.COLORS.PRIMARY
                 foregroundColor: "0xffffff"
