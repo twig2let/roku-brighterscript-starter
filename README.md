@@ -10,22 +10,13 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 
 ## 📸 Screenshots
 
-<p align="left">
-  <table>
-    <tr>
-      <td align="center"><strong>Home Screen</strong><br><img src="./assets/home_1280x720.jpg" width="400"></td>
-      <td align="center"><strong>Details Screen</strong><br><img src="./assets/details_1280x720.jpg" width="400"></td>
-    </tr>
-    <tr>
-      <td align="center"><strong>Playback Screen</strong><br><img src="./assets/player_1280x720.jpg" width="400"></td>
-      <td align="center"><strong>Error Screen</strong><br><img src="./assets/error_1280x720.jpg" width="400"></td>
-    </tr>
-    <tr>
-      <td align="center"><strong>Exit Confirmation</strong><br><img src="./assets/exit_confirmation_1280x720.jpg" width="400"></td>
-      <td align="center"></td>
-    </tr>
-  </table>
-</p>
+| Home Screen | Details Screen |
+| --- | --- |
+| <img src="./assets/home_1280x720.jpg" width="400"> | <img src="./assets/details_1280x720.jpg" width="400"> |
+| Playback Screen | Error Screen |
+| <img src="./assets/player_1280x720.jpg" width="400"> | <img src="./assets/error_1280x720.jpg" width="400"> |
+| Exit Confirmation |  |
+| <img src="./assets/exit_confirmation_1280x720.jpg" width="400"> |  |
 
 ## ✨ Features
 
