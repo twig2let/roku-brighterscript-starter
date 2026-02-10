@@ -140,7 +140,7 @@ The app includes a global EventBus for decoupled, app‑wide events:
 
 ```brs
 SDK.Core.EventBus.on("player:time", sub(payload)
-    ?"time ms = "; payload.ms
+    ?`time in ms: ${payload.ms}`
 end sub)
 
 SDK.Core.EventBus.emit("player:time", { ms: 12345 })
