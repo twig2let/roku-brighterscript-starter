@@ -20,6 +20,10 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
       <td align="center"><strong>Playback Screen</strong><br><img src="./assets/player_1280x720.jpg" width="400"></td>
       <td align="center"><strong>Error Screen</strong><br><img src="./assets/error_1280x720.jpg" width="400"></td>
     </tr>
+    <tr>
+      <td align="center"><strong>Exit Confirmation</strong><br><img src="./assets/exit_confirmation_1280x720.jpg" width="400"></td>
+      <td align="center"></td>
+    </tr>
   </table>
 </p>
 
