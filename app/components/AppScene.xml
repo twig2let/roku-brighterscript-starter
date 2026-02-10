@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <component name="AppScene" extends="Scene">
+    <interface>
+        <field id="exitApp" type="boolean" />
+    </interface>
+
     <children>
         <Rectangle width="1920" height="1080" color="0x000000" />
         <Router id="appRouter"/>
-
         <Timer id="minimumSplashTimer" repeat="false" />
     </children>
 

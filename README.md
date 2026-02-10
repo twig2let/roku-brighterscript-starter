@@ -10,18 +10,13 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 
 ## 📸 Screenshots
 
-<p align="left">
-  <table>
-    <tr>
-      <td align="center"><strong>Home Screen</strong><br><img src="./assets/home_1280x720.jpg" width="400"></td>
-      <td align="center"><strong>Details Screen</strong><br><img src="./assets/details_1280x720.jpg" width="400"></td>
-    </tr>
-    <tr>
-      <td align="center"><strong>Playback Screen</strong><br><img src="./assets/player_1280x720.jpg" width="400"></td>
-      <td align="center"><strong>Error Screen</strong><br><img src="./assets/error_1280x720.jpg" width="400"></td>
-    </tr>
-  </table>
-</p>
+| Home Screen | Details Screen |
+| --- | --- |
+| <img src="./assets/home_1280x720.jpg" width="400"> | <img src="./assets/details_1280x720.jpg" width="400"> |
+| Playback Screen | Error Screen |
+| <img src="./assets/player_1280x720.jpg" width="400"> | <img src="./assets/error_1280x720.jpg" width="400"> |
+| Exit Confirmation Modal |  |
+| <img src="./assets/exit_confirmation_1280x720.jpg" width="400"> |  |
 
 ## ✨ Features
 
@@ -30,6 +25,8 @@ A production-ready starter kit for building modern Roku apps using [BrighterScri
 | ⚡ **BrighterScript Support**     | Modern TypeScript-like language for Roku (classes, interfaces, constants, enums, namespaces, null-Coalescing Operator, transpiled to BrightScript) |
 | 🛠 **Node Build Pipeline**       | Transpilation, validation, packaging, and deployment directly to a Roku device                    |
 | 🧭 **Stack-Based Router**        | Navigate between screens with full state and history management                                   |
+| 📣 **Global Event Bus**          | Lightweight publish/subscribe for app-wide events without tight coupling                          |
+| 🚪 **Exit Confirmation Modal**   | Back‑key exit confirmation when there is no navigation history                                     |
 | 🌐 **HTTP Helper**               | Built-in class for clean, reusable API calls                                                      |
 | 🧩 **Modular Project Structure** | Screens and components separated for maintainability and scale                                    |
 | 🧪 **RALE Debug Integration**    | Automatically bundles Roku’s [debug extension](https://developer.roku.com/en-gb/docs/developer-program/dev-tools/rale-tutorial.md) for advanced inspection       |
@@ -111,6 +108,7 @@ Just run the __Debug__ launch task in the VSCode IDE.
 │   ├─ libs/ # Shared libraries/helpers
 │   ├─ parsers/ # Data parsing/normalisation logic
 │   └─ sdk/ # Framework-grade non UI related code
+│     └─ core/ # Core utilities (EventBus, etc.)
 ├─ pipeline/ # Build/deployment pipeline scripts
 └- bsconfig.json # BrighterScript config
 ```
@@ -134,6 +132,28 @@ Example usage:
 
 ```brs
 App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: viewData })
+```
+
+## 📣 Event Bus
+
+The app includes a global EventBus for decoupled, app‑wide events:
+
+```brs
+SDK.Core.EventBus.on("player:time", sub(payload)
+    ?`time in ms: ${payload.ms}`
+end sub)
+
+SDK.Core.EventBus.emit("player:time", { ms: 12345 })
+```
+
+## 🚪 Exit Confirmation Modal
+
+When the user presses **Back** and there is no navigation history, the app shows an exit confirmation modal.
+The modal emits events via the EventBus:
+
+```brs
+SDK.Core.EventBus.emit(App.Constants.Events.EXIT_APP)
+SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
 ```
 
 ## 🌐 HTTP Helper Example

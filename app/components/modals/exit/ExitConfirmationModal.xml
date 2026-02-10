@@ -1,0 +1,19 @@
+<component name="ExitConfirmationModal" extends="Group">
+    <interface>
+        <function name="setFocus" />
+    </interface>
+
+    <children>
+        <Rectangle id="dimmer" width="1920" height="1080" color="#000000" />
+
+        <Poster id="logo" uri="pkg:/images/logo.png" />
+        <AppLabel id="message" text="Leaving so soon?" fontStyle="BOLD" color="#FFFFFF" horizAlign="center" />
+
+        <FocusLayoutGroup id="buttonsGroup" vertAlignment="top" horizAlignment="left" layoutDirection="horiz">
+            <AppButton id="yesButton" text="Yeah, I'm done" />
+            <AppButton id="noButton" text="No, I want more" />
+        </FocusLayoutGroup>
+    </children>
+
+    <script type="text/brightscript" uri="./ExitConfirmationModal.bs" />
+</component>

@@ -8,6 +8,7 @@
         <!-- FUNCTIONS -->
         <function name="goBack" />
         <function name="navigateTo" />
+        <function name="setFocus" />
     </interface>
 
     <children>

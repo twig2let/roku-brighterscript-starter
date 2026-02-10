@@ -1,5 +1,11 @@
 namespace App.Utils.ObjectUtils
 
+    '/**
+    ' * Performs a shallow comparison of two associative arrays.
+    ' * @param objectA - First object to compare; equal to `objectB` when both invalid.
+    ' * @param objectB - Second object to compare.
+    ' * @returns True when both objects share the same keys and primitive values.
+    ' */
     function shallowEqual(objectA as Object, objectB as Object) as Boolean
         if objectA = invalid AND objectB = invalid then return true
         if objectA = invalid OR objectB = invalid then return false
@@ -11,6 +17,96 @@ namespace App.Utils.ObjectUtils
         end for
 
         return true
+    end function
+
+    '/**
+    ' * Deeply merges two associative arrays without mutating either source.
+    ' * @param objectA - Base object to merge from; treated as empty when invalid.
+    ' * @param objectB - Object providing overrides; treated as empty when invalid.
+    ' * @returns A new associative array: nested associative arrays are merged,
+    ' *          arrays are cloned (right-hand side wins), and primitive values
+    ' *          are copied by value.
+    ' */
+    function deepMerge(objectA as Object, objectB as Object) as Object
+        if objectA = invalid AND objectB = invalid then return {}
+        if objectA = invalid then return deepClone(objectB)
+        if objectB = invalid then return deepClone(objectA)
+
+        merged = {}
+
+        for each key in objectA
+            merged[key] = deepClone(objectA[key])
+        end for
+
+        for each key in objectB
+            valueB = objectB[key]
+
+            if merged.doesExist(key) AND type(merged[key]) = "roAssociativeArray" AND type(valueB) = "roAssociativeArray"
+                merged[key] = deepMerge(merged[key], valueB)
+            else
+                merged[key] = deepClone(valueB)
+            end if
+        end for
+
+        return merged
+    end function
+
+    ' /**
+    '  * Deep-clone a value composed of BrightScript data structures.
+    '  *
+    '  * Recursively clones `roAssociativeArray` and `roArray` values to produce a
+    '  * structurally independent copy. **SceneGraph nodes** (objects implementing
+    '  * `ifSGNode`) are **not** cloned and are returned **by reference** to avoid
+    '  * marshalling/subtype issues. All other primitives/objects are returned as-is.
+    '  *
+    '  * ⚠️ Notes:
+    '  * - Cycles are **not** detected; cyclic graphs will cause infinite recursion.
+    '  * - Non-AA/Array objects (e.g. `roByteArray`, `roDateTime`) pass through.
+    '  * - Keep payloads “pure data” (AA/Array/primitives) for predictable results.
+    '  *
+    '  * @param   {Dynamic} originalValue
+    '  *          The value to clone. Typically an AA/Array containing primitives.
+    '  *
+    '  * @returns {Dynamic}
+    '  *          A deep copy of `originalValue` for AA/Array inputs; otherwise the
+    '  *          original reference/value (SG nodes and other objects are returned
+    '  *          unchanged; primitives are returned by value).
+    '  *
+    '  * @example
+    '  *   aa = { a: 1, b: [1,2,3] }
+    '  *   copy = deepClone(aa)
+    '  *   copy.b.push(4) ' does not affect aa.b
+    '  *
+    '  * @example
+    '  *   ' SG nodes are preserved by reference
+    '  *   n = CreateObject("roSGNode", "Node")
+    '  *   out = deepClone({ node: n })
+    '  *   ? (out.node = n) ' true
+    '  */
+    function deepClone(originalValue as Dynamic) as Dynamic
+        ' Preserve SG nodes by reference (don’t attempt to clone)
+        if originalValue <> invalid AND GetInterface(originalValue, "ifSGNode") <> invalid then return originalValue
+
+        originalType = type(originalValue)
+
+        if originalType = "roAssociativeArray"
+            clonedAssociativeArray = {}
+            for each keyName in originalValue
+                childValue = originalValue[keyName]
+                clonedAssociativeArray[keyName] = deepClone(childValue)
+            end for
+            return clonedAssociativeArray
+
+        else if originalType = "roArray"
+            clonedArray = []
+            for each elementValue in originalValue
+                clonedArray.push(deepClone(elementValue))
+            end for
+            return clonedArray
+        end if
+
+        ' Primitives and other object types are returned as-is
+        return originalValue
     end function
 
 end namespace

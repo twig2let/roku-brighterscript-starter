@@ -1,6 +1,8 @@
 import "pkg:/components/sdk/helpers/RequestHelper.bs"
+import "pkg:/source/constants/Events.bs"
 import "pkg:/source/facades/RouterFacade.bs"
 import "pkg:/source/RouteDefintions.bs"
+import "pkg:/source/sdk/core/EventBus.bs"
 import "pkg:/source/Theme.bs"
 
 sub init()
@@ -9,6 +11,7 @@ sub init()
     #end if
 
     m._dataLoaded = false
+    m._exitModal = invalid
     m._initialData = invalid
     m._splashTimerFired = false
 
@@ -16,6 +19,9 @@ sub init()
     m.minimumSplashTimer = m.top.findNode("minimumSplashTimer")
 
     m.minimumSplashTimer.observeFieldScoped("fire", "onMinimumSplashTimerFired")
+
+    SDK.Core.EventBus.on(App.Constants.Events.EXIT_APP, onExitApp)
+    SDK.Core.EventBus.on(App.Constants.Events.CLOSE_EXIT_CONFIRMATION, onCloseExitConfirmation)
 
     _setGlobals()
     _navigateToSplashScreen()
@@ -29,6 +35,14 @@ end sub
 sub onMinimumSplashTimerFired()
     m._splashTimerFired = true
     if m._dataLoaded then _navigateToHomeScreen(m._initialData)
+end sub
+
+sub onExitApp(payload = invalid as Object)
+    m.top.exitApp = true
+end sub
+
+sub onCloseExitConfirmation(payload = invalid as Object)
+    _hideExitConfirmation()
 end sub
 
 '-----------------
@@ -73,6 +87,24 @@ sub _loadData()
     end sub)
 end sub
 
+sub _showExitConfirmation()
+    if m._exitModal = invalid
+        m._exitModal = m.top.createChild("ExitConfirmationModal")
+    end if
+
+    m._exitModal@.setFocus(true)
+end sub
+
+sub _hideExitConfirmation()
+    if m._exitModal = invalid then return
+
+    m.top.removeChild(m._exitModal)
+    m._exitModal = invalid
+
+    ' Restore focus to the current screen
+    App.Navigation.Router.setFocus(true)
+end sub
+
 '-----------------
 ' KEY HANDLING
 ' -----------------
@@ -81,7 +113,9 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if press = false return false
 
     if key = "back"
-        App.Navigation.Router.goBack()
+        didGoBack = App.Navigation.Router.goBack()
+        if NOT didGoBack then _showExitConfirmation()
+    
         return true
     end if
 

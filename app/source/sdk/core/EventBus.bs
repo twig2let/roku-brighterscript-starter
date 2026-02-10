@@ -1,0 +1,288 @@
+import "pkg:/source/sdk/utils/ObjectUtils.bs"
+
+namespace SDK.Core.EventBus
+
+    const GLOBAL_NODE_ID = "SDK::EventBus::Node"
+
+    ' /**
+    '  * Get a per-component EventBus facade backed by a single global SG node.
+    '  *
+    '  * The bus uses two fields per event:
+    '  *   • An **integer tick** field with `alwaysNotify=true` (the signal).
+    '  *   • A **payload field** (assocarray) storing a deep-cloned payload.
+    '  *
+    '  * No SG node references are stored in global fields. Payloads are
+    '  * wrapped when needed so the payload field remains an assocarray.
+    '  *
+    '  * @returns {Object} Facade with `.on()`, `.off()`, `.emit()`, `.clear()`.
+    '  * @example
+    '  *   bus = SDK.Core.EventBus.get()
+    '  *   bus.on("auth:login", sub(p) : ?"user=", p.user : end sub)
+    '  *   bus.emit("auth:login", { user: "jon" })
+    '  */
+    function get() as Object
+        _global = m.global
+        if _global = invalid then return invalid
+
+        ' Create/reuse the shared global node
+        if NOT _global.hasField(GLOBAL_NODE_ID)
+            _global.addField(GLOBAL_NODE_ID, "node", false)
+            _global[GLOBAL_NODE_ID] = CreateObject("roSGNode", "Node")
+        end if
+
+        if m.__sdkBus <> invalid then return m.__sdkBus
+
+        busNode = _global[GLOBAL_NODE_ID]
+
+        bus = {
+            _node: busNode
+            _subs: {} ' eventName -> roArray<{ callback: Function, context: Dynamic }>
+
+            ' /**
+            '  * Subscribe a handler in THIS component scope.
+            '  * Rebinding is idempotent; multiple calls add multiple handlers.
+            '  *
+            '  * If you pass `context`, your handler must accept (payload, context).
+            '  *
+            '  * @param {String}   eventName - Global event key (e.g., "cart:itemAdded").
+            '  * @param {Function} handler   - Callback: `sub(payload as Dynamic [, context as Object])`.
+            '  * @param {Dynamic}  [context] - Optional context to pass as 2nd arg to handler.
+            '  * @example
+            '  *   SDK.Core.EventBus.on("cart:itemAdded", sub(p) : ?"id=", p.id : end sub)
+            '  *   SDK.Core.EventBus.on("cart:itemAdded", onAdded, m) ' with context
+            '  */
+            on: sub(eventName as String, handler as Function, context = invalid as Dynamic)
+                if eventName = "" OR handler = invalid then return
+
+                m._ensure(eventName)
+
+                list = m._subs[eventName] ?? []
+                m._subs[eventName] = list
+
+                list.push({ callback: handler, context: context })
+
+                ' (Re)bind the scoped observer (idempotent)
+                m._node.unobserveFieldScoped(eventName)
+                m._node.observeFieldScoped(eventName, "SDK_EventBus_onEventFired")
+            end sub
+
+            ' /**
+            '  * Unsubscribe a previously registered handler by function reference.
+            '  * Context is ignored for unsubscription; the function reference is the key.
+            '  *
+            '  * @param {String}   eventName
+            '  * @param {Function} handler
+            '  */
+            off: sub(eventName as String, handler as Function)
+                list = m._subs[eventName]
+                if type(list) <> "roArray" then return
+
+                for i = list.count() - 1 to 0 step -1
+                    entry = list[i]
+                    if type(entry) = "roAssociativeArray" AND entry.callback = handler
+                        list.delete(i)
+                    end if
+                end for
+
+                if list.count() = 0
+                    m._subs.delete(eventName)
+                    m._node.unobserveFieldScoped(eventName)
+                end if
+            end sub
+
+            ' /**
+            '  * Emit an event with a payload (AA/Array/primitive).
+            '  *
+            '  * Payload is deep-cloned for immutability and stored in the
+            '  * assocarray payload field; then the integer tick is incremented
+            '  * to trigger observers.
+            '  *
+            '  * @param {String}  eventName
+            '  * @param {Dynamic} [payload] - Pure data only (no roSGNode refs).
+            '  * @example
+            '  *   SDK.Core.EventBus.emit("player:time", { ms: 12345 })
+            '  */
+            emit: sub(eventName as String, payload = invalid as Dynamic)
+                if eventName = "" then return
+
+                m._ensure(eventName)
+
+                ' Write payload AA (wrapped/coerced to keep field typing stable)
+                payloadFieldName = m._payloadField(eventName)
+                m._node[payloadFieldName] = m._coercePayload(payload)
+
+                ' Bump tick (integer with alwaysNotify=true)
+                currentTick = m._node.lookup(eventName)
+                if currentTick = invalid then currentTick = 0
+                m._node[eventName] = currentTick + 1
+            end sub
+
+            ' /**
+            '  * Remove all local (this component) subscriptions from the bus.
+            '  * Observers are unbound for any events this scope subscribed to.
+            '  */
+            clear: sub()
+                for each subscribedEventName in m._subs
+                    m._node.unobserveFieldScoped(subscribedEventName)
+                end for
+                m._subs = {}
+            end sub
+
+            ' ----------------------------------------------------------
+            ' Private helpers
+            ' ----------------------------------------------------------
+
+            ' /**
+            '  * Ensure the signal and payload fields exist for an event.
+            '  * - Signal: integer with alwaysNotify=true (monotonic tick).
+            '  * - Payload: assocarray (AA/Array/primitive wrapped into AA).
+            '  *
+            '  * SceneGraph fields are statically typed; we use an assocarray for payload
+            '  * and wrap non-AA values to keep the field type stable.
+            '  *
+            '  * @param {String} eventName
+            '  * @private
+            '  */
+            _ensure: sub(eventName as String)
+                if NOT m._node.hasField(eventName)
+                    m._node.addField(eventName, "integer", true) ' alwaysNotify
+                    m._node[eventName] = 0
+                end if
+
+                payloadFieldName = m._payloadField(eventName)
+                if NOT m._node.hasField(payloadFieldName)
+                    m._node.addField(payloadFieldName, "assocarray", false)
+                    m._node[payloadFieldName] = {}
+                end if
+            end sub
+
+            ' /**
+            '  * Compute the payload field name for a given event.
+            '  * @param {String} eventName
+            '  * @returns {String}
+            '  * @private
+            '  */
+            _payloadField: function(eventName as String) as String
+                return `SDK__payload__${eventName}`
+            end function
+
+            ' /**
+            '  * Coerce payload into an assocarray for stable field typing.
+            '  * BrightScript field types are static; we keep payload as AA and
+            '  * wrap arrays and primitives.
+            '  *
+            '  * - AA       → deep-cloned AA
+            '  * - Array    → { __array: true,     value: deepClone(array) }
+            '  * - Primitive→ { __primitive: true, value: originalValue     }
+            '  *
+            '  * @param   {Dynamic} value
+            '  * @returns {Object}  Wrapped payload AA (immutable copy for AA/Array).
+            '  * @private
+            '  */
+            _coercePayload: function(value as Dynamic) as Object
+                valueType = type(value)
+                if valueType = "roAssociativeArray"
+                    return App.Utils.ObjectUtils.deepClone(value)
+                else if valueType = "roArray"
+                    return { __array: true, value: App.Utils.ObjectUtils.deepClone(value) }
+                else
+                    return { __primitive: true, value: value }
+                end if
+            end function
+
+            ' /**
+            '  * Reverse of `_coercePayload` — unwrap stored AA to original shape.
+            '  *
+            '  * @param   {Object}  stored - The assocarray stored in the payload field.
+            '  * @returns {Dynamic} Original payload (AA/Array/primitive).
+            '  * @private
+            '  */
+            _decoercePayload: function(stored as Object) as Dynamic
+                if type(stored) = "roAssociativeArray"
+                    if stored.__array = true then return stored.value
+                    if stored.__primitive = true then return stored.value
+                end if
+                return stored
+            end function
+        }
+
+        m.__sdkBus = bus
+        return bus
+    end function
+
+    ' -------------------------------------------------------------------------
+    ' Convenience wrappers (namespace-level). Accept optional context in `on()`.
+    ' -------------------------------------------------------------------------
+    sub on(eventName as String, handler as Function, context = invalid as Dynamic)
+        bus = get()
+        if bus <> invalid then bus.on(eventName, handler, context)
+    end sub
+
+    sub off(eventName as String, handler as Function)
+        bus = get()
+        if bus <> invalid then bus.off(eventName, handler)
+    end sub
+
+    sub emit(eventName as String, payload = invalid as Dynamic)
+        bus = get()
+        if bus <> invalid then bus.emit(eventName, payload)
+    end sub
+
+    sub clear()
+        bus = get()
+        if bus <> invalid then bus.clear()
+    end sub
+
+end namespace
+
+' -----------------------------------------------------------------------------
+' OBSERVER: must be top-level so observeFieldScoped can resolve it
+'           in the importing component's scope.
+' -----------------------------------------------------------------------------
+' /**
+'  * Internal field observer for all events.
+'  * Takes a stable snapshot of handlers to avoid mutation issues when handlers
+'  * unsubscribe themselves during dispatch (e.g., calling `off()` inside a handler).
+'  *
+'  * @param {roSGNodeEvent} event
+'  */
+sub SDK_EventBus_onEventFired(event as Object)
+    bus = m.__sdkBus
+    if bus = invalid then return
+
+    node = event.getRoSGNode()
+    if node = invalid then return
+
+    eventName = event.getField()
+    list = bus._subs[eventName]
+    if type(list) <> "roArray" OR list.count() = 0 then return
+
+    ' Take a stable snapshot in case handlers modify subscriptions during dispatch
+    handlersSnapshot = []
+    for i = 0 to list.count() - 1
+        handlersSnapshot.push(list[i])
+    end for
+
+    payloadFieldName = bus._payloadField(eventName)
+    storedPayloadAA = node[payloadFieldName]
+    payload = bus._decoercePayload(storedPayloadAA)
+
+    for each entry in handlersSnapshot
+        if type(entry) = "roAssociativeArray"
+            handlerFunction = entry.callback
+            handlerContext = entry.context
+            if handlerFunction <> invalid then
+                if handlerContext = invalid
+                    handlerFunction(payload)
+                else
+                    ' If you pass context, your handler must accept (payload, context)
+                    handlerFunction(payload, handlerContext)
+                end if
+            end if
+        end if
+    end for
+
+    ' Clear the payload AA so old data doesn’t linger.
+    ' This does NOT trigger observers because the signal is the integer tick field.
+    node[payloadFieldName] = {}
+end sub

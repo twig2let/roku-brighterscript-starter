@@ -10,3 +10,8 @@ end sub
 '@abstract
 sub onParamsChanged(event as Object)
 end sub
+
+' @abstract
+function setFocus(focused as Boolean) as Boolean
+    return false
+end function

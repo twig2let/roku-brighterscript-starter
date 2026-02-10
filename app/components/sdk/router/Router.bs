@@ -41,13 +41,23 @@ sub navigateTo(route as Object, params = {} as Object, routeState = invalid as O
     m.top.currentRoute = route
 end sub
 
-sub goBack(params = invalid as Object)
-    if NOT m._route.canGoBack then return
+function goBack(params = invalid as Object) as Boolean
+    if NOT m._route?.canGoBack then return false
+    if m._routeHistory.count() = 0 then return false
 
     nextRoute = m._routeHistory.pop()
     if nextRoute.routeState <> invalid then nextRoute.params.append({ routeState: nextRoute.routeState })
     navigateTo(nextRoute.route, nextRoute.params)
-end sub
+    return true
+end function
+
+function setFocus(focused as Boolean) as Boolean
+    if m._screen <> invalid
+        return m._screen@.setFocus(true)
+    end if
+
+    return m.top.setFocus(true)
+end function
 
 ' -------------------
 ' PRIVATE METHODS
