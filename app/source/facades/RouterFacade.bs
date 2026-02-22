@@ -27,7 +27,7 @@ namespace SDK.Navigation.Router
     sub navigateTo(route as Object, params = {} as Object, routeState = invalid as Object)
         router = _getRouter()
         if router = invalid
-            print "[RouterFacade] Router not initialised"
+            print "[SDK][RouterFacade] Router not initialised"
             return
         end if
 
@@ -37,7 +37,7 @@ namespace SDK.Navigation.Router
     function goBack(params = invalid as Object) as Boolean
         router = _getRouter()
         if router = invalid
-            print "[RouterFacade] Router not initialised"
+            print "[SDK][RouterFacade] Router not initialised"
             return false
         end if
 
@@ -47,7 +47,7 @@ namespace SDK.Navigation.Router
     function setFocus(focused as Boolean) as Boolean
         router = _getRouter()
         if router = invalid
-            print "[RouterFacade] Router not initialised"
+            print "[SDK][RouterFacade] Router not initialised"
             return false
         end if
 

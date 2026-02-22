@@ -21,7 +21,7 @@ end sub
 ' - `routeState` should be plain data; SG nodes pass by reference via deepClone/deepMerge.
 sub navigateTo(route as Object, params = {} as Object, routeState = invalid as Object)
     if m._isNavigating
-        print "[Router] navigateTo ignored: already navigating"
+        print "[SDK][Router] navigateTo ignored: already navigating"
         return
     end if
 
@@ -41,12 +41,12 @@ end sub
 ' - Adds `params.backState` and sets top-level `isBackJourney = true`.
 function goBack(params = invalid as Object) as Boolean
     if NOT m._route?.canGoBack
-        print "[Router] goBack denied: canGoBack=false"
+        print "[SDK][Router] goBack denied: canGoBack=false"
         return false
     end if
 
     if m._routeHistory.isEmpty()
-        print "[Router] goBack denied: empty history"
+        print "[SDK][Router] goBack denied: empty history"
         return false
     end if
 
@@ -62,7 +62,7 @@ function goBack(params = invalid as Object) as Boolean
 
     mergedParams = _buildRouteParams(previousRoute.params, true, backState)
 
-    print "[Router] goBack: "; previousRoute.route?.name; " backState="; (mergedParams.backState <> invalid)
+    print "[SDK][Router] goBack: "; previousRoute.route?.name; " backState="; (mergedParams.backState <> invalid)
     _navigateToWithParams(previousRoute.route, mergedParams, invalid)
 
     return true
@@ -72,11 +72,11 @@ end function
 ' - Proxies focus to the current screen (if any), otherwise the router node.
 function setFocus(focused as Boolean) as Boolean
     if m._screen <> invalid
-        print "[Router] setFocus to screen: "; m._route?.name; " focused="; focused
+        print "[SDK][Router] setFocus to screen: "; m._route?.name; " focused="; focused
         return m._screen@.setFocus(true)
     end if
 
-    print "[Router] setFocus to router node: focused="; focused
+    print "[SDK][Router] setFocus to router node: focused="; focused
     return m.top.setFocus(true)
 end function
 
@@ -91,11 +91,11 @@ function _isSameRoute(currentRoute as Object, proposedRoute as Object, currentPa
 end function
 
 sub _navigateToWithParams(route as Object, routeParams as Object, routeState = invalid as Object)
-    print "[Router] navigateTo: "; route?.name; " isBackJourney="; routeParams.isBackJourney; " backState="; (routeParams.doesExist("backState") AND routeParams.backState <> invalid)
+    print "[SDK][Router] navigateTo: "; route?.name; " isBackJourney="; routeParams.isBackJourney; " backState="; (routeParams.doesExist("backState") AND routeParams.backState <> invalid)
 
     ' Prevent pointless reloads (same component + same (shallow) props)
     if _isSameRoute(m._route, route, m._params, routeParams)
-        print "[Router] navigateTo ignored: same route/params"
+        print "[SDK][Router] navigateTo ignored: same route/params"
         return
     end if
 
@@ -117,7 +117,7 @@ sub _navigateToWithParams(route as Object, routeParams as Object, routeState = i
 
     m._isNavigating = false
     m.top.currentRoute = route
-    print "[Router] navigateTo complete: "; route?.name
+    print "[SDK][Router] navigateTo complete: "; route?.name
 end sub
 
 function _buildRouteParams(params as Object, isBackJourney as Boolean, backState = invalid as Object) as Object
@@ -151,7 +151,7 @@ function _addScreen(route as Object, params = {} as Object) as Object
     screen = m.routeContainer.createChild(route.component)
 
     if screen = invalid
-        print "[Router] Failed to create: "; route.component
+        print "[SDK][Router] Failed to create: "; route.component
         m._isNavigating = false
         return invalid
     end if
