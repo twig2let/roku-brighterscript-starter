@@ -21,9 +21,9 @@ end function
 
 sub onSelectedButtonChanged(event as Object)
     if event.getData() = "yesButton"
-        SDK.Core.EventBus.emit(App.Constants.Events.EXIT_APP)
+        SDK.EventBus.emit(App.Constants.Events.EXIT_APP)
     else
-        SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+        SDK.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
     end if
 end sub
 
@@ -35,7 +35,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if press = false then return false
 
     if key = "back"
-        SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+        SDK.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
         
         return true
     end if

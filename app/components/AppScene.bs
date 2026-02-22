@@ -20,8 +20,8 @@ sub init()
 
     m.minimumSplashTimer.observeFieldScoped("fire", "onMinimumSplashTimerFired")
 
-    SDK.Core.EventBus.on(App.Constants.Events.EXIT_APP, onExitApp)
-    SDK.Core.EventBus.on(App.Constants.Events.CLOSE_EXIT_CONFIRMATION, onCloseExitConfirmation)
+    SDK.EventBus.on(App.Constants.Events.EXIT_APP, onExitApp)
+    SDK.EventBus.on(App.Constants.Events.CLOSE_EXIT_CONFIRMATION, onCloseExitConfirmation)
 
     _setGlobals()
     _navigateToSplashScreen()

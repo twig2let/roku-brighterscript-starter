@@ -138,11 +138,11 @@ SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: vie
 The app includes a global EventBus for decoupled, app‑wide events:
 
 ```brs
-SDK.Core.EventBus.on("player:time", sub(payload)
+SDK.EventBus.on("player:time", sub(payload)
     ?`time in ms: ${payload.ms}`
 end sub)
 
-SDK.Core.EventBus.emit("player:time", { ms: 12345 })
+SDK.EventBus.emit("player:time", { ms: 12345 })
 ```
 
 ## 🚪 Exit Confirmation Modal
@@ -151,8 +151,8 @@ When the user presses **Back** and there is no navigation history, the app shows
 The modal emits events via the EventBus:
 
 ```brs
-SDK.Core.EventBus.emit(App.Constants.Events.EXIT_APP)
-SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
+SDK.EventBus.emit(App.Constants.Events.EXIT_APP)
+SDK.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
 ```
 
 ## 🌐 HTTP Helper Example
