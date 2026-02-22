@@ -113,7 +113,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if press = false return false
 
     if key = "back"
-        didGoBack = SDK.Navigation.Router.goBack({ someStateOnBack: "someValue" })
+        didGoBack = SDK.Navigation.Router.goBack()
         if NOT didGoBack then _showExitConfirmation()
 
         return true
