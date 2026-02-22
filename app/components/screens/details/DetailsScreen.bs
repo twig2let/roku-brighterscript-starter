@@ -62,7 +62,7 @@ end sub
 sub _loadShowDetails(showId as String)
     App.Helpers.HTTP.makeRequest("GET", `https://api.tvmaze.com/shows/${showId}?embed[]=images`, invalid, sub(response as Object)
         if NOT response.ok
-            App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
+            SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
             return
         end if
 
@@ -109,5 +109,5 @@ sub _navigateToVideoPlayer()
     contentMetadata = createObject("RoSGNode", "ContentNode")
     contentMetadata.setFields(m.videoSource)
 
-    App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.VIDEO, { source: contentMetadata })
+    SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.VIDEO, { source: contentMetadata })
 end sub

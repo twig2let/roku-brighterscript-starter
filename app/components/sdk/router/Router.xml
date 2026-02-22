@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<component name="Router" extends="Group">
+<component name="SDK::Router" extends="Group">
     <interface>
         <!-- OUTPUTS -->
         <field id="currentRoute" type="assocarray" />

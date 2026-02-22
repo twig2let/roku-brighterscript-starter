@@ -14,48 +14,69 @@ end sub
 ' PUBLIC METHODS
 ' -------------------
 
+' navigateTo
+' - Navigates to a route and builds the target screen.
+' - `params` becomes the target screen params (with `isBackJourney` ensured).
+' - `routeState` is stored for a future back journey (returned as `params.backState`).
+' - `routeState` should be plain data; SG nodes pass by reference via deepClone/deepMerge.
 sub navigateTo(route as Object, params = {} as Object, routeState = invalid as Object)
-    if m._isNavigating then return
+    if m._isNavigating
+        print "[Router] navigateTo ignored: already navigating"
+        return
+    end if
 
-    ' Prevent pointless reloads (same component + same (shallow) props)
-    if _isSameRoute(m._route, route, m._params, params) then return
-
-    m._isNavigating = true
-
-    ' If the existing route should be added to history, add it!
-    if m._route?.addToHistory ?? false then m._routeHistory.push({
-        params: m._params
-        route: m._route
-        routeState: routeState
-    })
-
-    ' Remove old screen (with teardown)
-    if m._screen <> invalid then _removeScreen(m._screen)
-
-    ' Build new screen
-    m._screen = _addScreen(route, params)
-    m._route = route
-    m._params = params
-
-    m._isNavigating = false
-    m.top.currentRoute = route
+    if params = invalid then params = {}
+    isBackJourney = params?.isBackJourney ?? false
+    ' Back-journey semantics:
+    ' - `isBackJourney` is always present in params at the top level.
+    ' - `routeState` is captured on forward navigation and returned later as `params.backState`.
+    ' - Forward navigations clear any stale `backState` from params.
+    routeParams = _buildRouteParams(params, isBackJourney)
+    _navigateToWithParams(route, routeParams, routeState)
 end sub
 
+' goBack
+' - Returns false when back navigation is not allowed or no history exists.
+' - `params` are merged into the saved `backState` (goBack wins).
+' - Adds `params.backState` and sets top-level `isBackJourney = true`.
 function goBack(params = invalid as Object) as Boolean
-    if NOT m._route?.canGoBack then return false
-    if m._routeHistory.count() = 0 then return false
+    if NOT m._route?.canGoBack
+        print "[Router] goBack denied: canGoBack=false"
+        return false
+    end if
 
-    nextRoute = m._routeHistory.pop()
-    if nextRoute.routeState <> invalid then nextRoute.params.append({ routeState: nextRoute.routeState })
-    navigateTo(nextRoute.route, nextRoute.params)
+    if m._routeHistory.isEmpty()
+        print "[Router] goBack denied: empty history"
+        return false
+    end if
+
+    previousRoute = m._routeHistory.pop()
+    ' Back-journey semantics:
+    ' - `params` passed to goBack are merged into the saved `backState` (goBack wins).
+    ' - `backState` is attached to `params.backState` for the destination route.
+    ' - `isBackJourney` is set to true at the top level.
+    backState = previousRoute.backState
+    if params <> invalid
+        backState = App.Utils.ObjectUtils.deepMerge(backState, params)
+    end if
+
+    mergedParams = _buildRouteParams(previousRoute.params, true, backState)
+
+    print "[Router] goBack: "; previousRoute.route?.name; " backState="; (mergedParams.backState <> invalid)
+    _navigateToWithParams(previousRoute.route, mergedParams, invalid)
+
     return true
 end function
 
+' setFocus
+' - Proxies focus to the current screen (if any), otherwise the router node.
 function setFocus(focused as Boolean) as Boolean
     if m._screen <> invalid
+        print "[Router] setFocus to screen: "; m._route?.name; " focused="; focused
         return m._screen@.setFocus(true)
     end if
 
+    print "[Router] setFocus to router node: focused="; focused
     return m.top.setFocus(true)
 end function
 
@@ -67,6 +88,52 @@ function _isSameRoute(currentRoute as Object, proposedRoute as Object, currentPa
     if currentRoute?.component <> proposedRoute.component then return false
 
     return App.Utils.ObjectUtils.shallowEqual(currentParams, proposedParams)
+end function
+
+sub _navigateToWithParams(route as Object, routeParams as Object, routeState = invalid as Object)
+    print "[Router] navigateTo: "; route?.name; " isBackJourney="; routeParams.isBackJourney; " backState="; (routeParams.doesExist("backState") AND routeParams.backState <> invalid)
+
+    ' Prevent pointless reloads (same component + same (shallow) props)
+    if _isSameRoute(m._route, route, m._params, routeParams)
+        print "[Router] navigateTo ignored: same route/params"
+        return
+    end if
+
+    m._isNavigating = true
+
+    if (m._route?.addToHistory ?? false) AND NOT routeParams.isBackJourney then m._routeHistory.push({
+        params: m._params
+        route: m._route
+        backState: routeState
+    })
+
+    ' Remove old screen (with teardown)
+    if m._screen <> invalid then _removeScreen(m._screen)
+
+    ' Build new screen
+    m._screen = _addScreen(route, routeParams)
+    m._route = route
+    m._params = routeParams
+
+    m._isNavigating = false
+    m.top.currentRoute = route
+    print "[Router] navigateTo complete: "; route?.name
+end sub
+
+function _buildRouteParams(params as Object, isBackJourney as Boolean, backState = invalid as Object) as Object
+    routeParams = App.Utils.ObjectUtils.deepClone(params)
+
+    if isBackJourney
+        routeParams.append({
+            isBackJourney: true
+            backState: backState
+        })
+    else
+        routeParams.append({ isBackJourney: false })
+        if routeParams.doesExist("backState") then routeParams.delete("backState")
+    end if
+
+    return routeParams
 end function
 
 sub _removeScreen(screen as Object)

@@ -7,7 +7,7 @@
 
     <children>
         <Rectangle width="1920" height="1080" color="0x000000" />
-        <Router id="appRouter"/>
+        <SDK::Router id="appRouter"/>
         <Timer id="minimumSplashTimer" repeat="false" />
     </children>
 

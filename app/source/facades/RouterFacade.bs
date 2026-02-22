@@ -1,6 +1,16 @@
 ' Router Façade
+' - Lightweight accessors for the global Router node.
+' - Must be initialized via setGlobalRouter during app startup.
+'
+' Example usage:
+'   SDK.Navigation.Router.navigateTo(App.Constants.RouteDefintions.HOME)
+'   SDK.Navigation.Router.navigateTo(App.Constants.RouteDefintions.DETAILS, {
+'       data: { id: "abc123" }
+'   })
+'   SDK.Navigation.Router.goBack({ jumpToRowItem: 3 })
+'   SDK.Navigation.Router.setFocus(true)
 
-namespace App.Navigation.Router
+namespace SDK.Navigation.Router
 
     ' -------------------
     ' PUBLIC METHODS
@@ -12,7 +22,9 @@ namespace App.Navigation.Router
     end sub
 
     ' routeState will be passed back to the route on a back journey
-    sub navigateTo(route as Object, params = invalid as Object, routeState = invalid as Object)
+    ' - Params are delivered to the target screen as `params`.
+    ' - `routeState` is returned later as `params.backState` on back journeys.
+    sub navigateTo(route as Object, params = {} as Object, routeState = invalid as Object)
         router = _getRouter()
         if router = invalid
             print "[RouterFacade] Router not initialised"
@@ -29,7 +41,7 @@ namespace App.Navigation.Router
             return false
         end if
 
-        return router@.goBack()
+        return router@.goBack(params)
     end function
 
     function setFocus(focused as Boolean) as Boolean
