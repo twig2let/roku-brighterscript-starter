@@ -1,6 +1,6 @@
 import "pkg:/source/sdk/utils/ObjectUtils.bs"
 
-namespace SDK.Core.EventBus
+namespace SDK.EventBus
 
     const GLOBAL_NODE_ID = "SDK::EventBus::Node"
 
@@ -16,7 +16,7 @@ namespace SDK.Core.EventBus
     '  *
     '  * @returns {Object} Facade with `.on()`, `.off()`, `.emit()`, `.clear()`.
     '  * @example
-    '  *   bus = SDK.Core.EventBus.get()
+    '  *   bus = SDK.EventBus.get()
     '  *   bus.on("auth:login", sub(p) : ?"user=", p.user : end sub)
     '  *   bus.emit("auth:login", { user: "jon" })
     '  */
@@ -48,8 +48,8 @@ namespace SDK.Core.EventBus
             '  * @param {Function} handler   - Callback: `sub(payload as Dynamic [, context as Object])`.
             '  * @param {Dynamic}  [context] - Optional context to pass as 2nd arg to handler.
             '  * @example
-            '  *   SDK.Core.EventBus.on("cart:itemAdded", sub(p) : ?"id=", p.id : end sub)
-            '  *   SDK.Core.EventBus.on("cart:itemAdded", onAdded, m) ' with context
+            '  *   SDK.EventBus.on("cart:itemAdded", sub(p) : ?"id=", p.id : end sub)
+            '  *   SDK.EventBus.on("cart:itemAdded", onAdded, m) ' with context
             '  */
             on: sub(eventName as String, handler as Function, context = invalid as Dynamic)
                 if eventName = "" OR handler = invalid then return
@@ -100,7 +100,7 @@ namespace SDK.Core.EventBus
             '  * @param {String}  eventName
             '  * @param {Dynamic} [payload] - Pure data only (no roSGNode refs).
             '  * @example
-            '  *   SDK.Core.EventBus.emit("player:time", { ms: 12345 })
+            '  *   SDK.EventBus.emit("player:time", { ms: 12345 })
             '  */
             emit: sub(eventName as String, payload = invalid as Dynamic)
                 if eventName = "" then return
