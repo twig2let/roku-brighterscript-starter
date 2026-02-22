@@ -20,7 +20,7 @@ end sub
 
 sub onVideoStateChanged(event as Object)
     state = event.getData()
-    if state = "error" OR state = "finished" then App.Navigation.Router.goBack()
+    if state = "error" OR state = "finished" then SDK.Navigation.Router.goBack()
 end sub
 
 ' -------------------
