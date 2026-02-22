@@ -107,8 +107,7 @@ Just run the __Debug__ launch task in the VSCode IDE.
 │   ├─ facades/ # Facade classes abstracting framework APIs
 │   ├─ libs/ # Shared libraries/helpers
 │   ├─ parsers/ # Data parsing/normalisation logic
-│   └─ sdk/ # Framework-grade non UI related code
-│     └─ core/ # Core utilities (EventBus, etc.)
+│   └─ sdk/ # Framework-grade non UI related code (EventBus, utilities, etc.)
 ├─ pipeline/ # Build/deployment pipeline scripts
 └- bsconfig.json # BrighterScript config
 ```
@@ -131,7 +130,7 @@ This starter includes a stack-based router, enabling:
 Example usage:
 
 ```brs
-App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: viewData })
+SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.HOME, { data: viewData })
 ```
 
 ## 📣 Event Bus
@@ -161,7 +160,7 @@ SDK.Core.EventBus.emit(App.Constants.Events.CLOSE_EXIT_CONFIRMATION)
 ```brs
 App.Helpers.HTTP.makeRequest("GET", "https://api.tvmaze.com/shows", invalid, sub(response as Object)
     if NOT response.ok
-        App.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
+        SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.ERROR)
         return
     end if
 
