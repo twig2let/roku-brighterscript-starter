@@ -1,6 +1,6 @@
 import "pkg:/components/modals/exit/ExitConfirmationModalStyle.bs"
 import "pkg:/source/constants/Events.bs"
-import "pkg:/source/sdk/core/EventBus.bs"
+import "pkg:/source/sdk/EventBus.bs"
 import "pkg:/source/sdk/utils/ViewUtils.bs"
 
 sub init()

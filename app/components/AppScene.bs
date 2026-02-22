@@ -2,7 +2,7 @@ import "pkg:/components/sdk/helpers/RequestHelper.bs"
 import "pkg:/source/constants/Events.bs"
 import "pkg:/source/facades/RouterFacade.bs"
 import "pkg:/source/RouteDefintions.bs"
-import "pkg:/source/sdk/core/EventBus.bs"
+import "pkg:/source/sdk/EventBus.bs"
 import "pkg:/source/Theme.bs"
 
 sub init()
