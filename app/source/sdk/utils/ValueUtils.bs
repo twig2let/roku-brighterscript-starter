@@ -1,0 +1,78 @@
+namespace App.Utils.ValueUtils
+
+    '/**
+    ' * @returns True when `value` is `invalid`.
+    ' */
+    function isInvalid(value as Dynamic) as Boolean
+        return value = invalid
+    end function
+
+    '/**
+    ' * True for an intrinsic `String` or a boxed `roString`.
+    ' */
+    function isString(value as Dynamic) as Boolean
+        valueType = type(value)
+        return valueType = "String" OR valueType = "roString"
+    end function
+
+    '/**
+    ' * True for an intrinsic `Boolean` or a boxed `roBoolean`.
+    ' */
+    function isBoolean(value as Dynamic) as Boolean
+        valueType = type(value)
+        return valueType = "Boolean" OR valueType = "roBoolean"
+    end function
+
+    '/**
+    ' * True for integer types, including `LongInteger` and boxed `roInt` / `roInteger`.
+    ' */
+    function isInteger(value as Dynamic) as Boolean
+        valueType = type(value)
+        return valueType = "Integer" OR valueType = "roInteger" OR valueType = "roInt" OR valueType = "LongInteger" OR valueType = "roLongInteger"
+    end function
+
+    '/**
+    ' * True for `Float`, `Double`, and their boxed forms.
+    ' */
+    function isFloat(value as Dynamic) as Boolean
+        valueType = type(value)
+        return valueType = "Float" OR valueType = "roFloat" OR valueType = "Double" OR valueType = "roDouble"
+    end function
+
+    '/**
+    ' * True when `value` is an integer or a float. `ParseJson` may use either.
+    ' */
+    function isNumber(value as Dynamic) as Boolean
+        return isInteger(value) OR isFloat(value)
+    end function
+
+    '/**
+    ' * @returns True when `value` is an `roArray`.
+    ' */
+    function isArray(value as Dynamic) as Boolean
+        return type(value) = "roArray"
+    end function
+
+    '/**
+    ' * @returns True when `value` is an `roAssociativeArray`.
+    ' */
+    function isAssociativeArray(value as Dynamic) as Boolean
+        return type(value) = "roAssociativeArray"
+    end function
+
+    '/**
+    ' * True for an intrinsic `Function` or a boxed `roFunction`.
+    ' */
+    function isFunction(value as Dynamic) as Boolean
+        valueType = type(value)
+        return valueType = "Function" OR valueType = "roFunction"
+    end function
+
+    '/**
+    ' * True for a SceneGraph node. Subtypes are matched through `ifSGNode`, same as `ObjectUtils.deepClone`.
+    ' */
+    function isNode(value as Dynamic) as Boolean
+        return value <> invalid AND GetInterface(value, "ifSGNode") <> invalid
+    end function
+
+end namespace
