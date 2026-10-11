@@ -28,9 +28,7 @@ end function
 
 ' @override
 sub onParamsChanged(event as Object)
-    params = event.getData()
-    _buildView(params)
-
+    _buildView(event.getData())
 
     m.rowList.setFocus(true)
 end sub
@@ -42,10 +40,10 @@ sub onRowItemSelectedChanged(event as Object)
     if selectedItem <> invalid
         routeState = { rowItemSelected: itemCoords }
         SDK.Navigation.Router.NavigateTo(App.Constants.RouteDefintions.DETAILS, { data: {
-                id: selectedItem.id
-                name: selectedItem.name
-                summary: selectedItem.summary
-            }
+            id: selectedItem.id
+            name: selectedItem.name
+            summary: selectedItem.summary
+        }
         }, routeState)
     end if
 end sub
@@ -56,6 +54,10 @@ end sub
 
 sub _buildView(params as Object)
     _createRowlist(params.data)
+
+    ' Restore item focus, if it's available
+    rowItemSelected = (params.backState?.rowItemSelected) ?? params.rowItemSelected ?? [0, 0]
+    m.rowList.jumpToRowItem = rowItemSelected
 end sub
 
 sub _createRowlist(data as Object)
